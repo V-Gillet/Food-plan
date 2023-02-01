@@ -1,11 +1,24 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	<main>
-		<h1>Register</h1>
-		{{ form_start(registrationForm) }}
-		<button type="submit">Register</button>
-		{{ form_end(registrationForm) }}
-		<a href="{{ path('app_login') }}" class="">Back</a>
-	</div>
-</main>{% endblock %}
+	<main class="container-fluid bg-white rounded-5">
+		<div class="container box-shadow rounded-4 my-4">
+			<h1 class="font-title text-primary text-center display-4 mt-5 mb-4">Inscription</h1>
+			{{ form_start(registrationForm) }}
+			{{ form_label(registrationForm.firstname, 'Prénom', {'label_attr': {'class': 'fs-5 mt-3'}}) }}
+			{{ form_widget(registrationForm.firstname, { 'attr': {'class': 'border border-primary border-1'} }) }}
+			{{ form_label(registrationForm.lastname, 'Nom', {'label_attr': {'class': 'fs-5 mt-3'}}) }}
+			{{ form_widget(registrationForm.lastname, { 'attr': {'class': 'border border-primary border-1'} }) }}
+			{{ form_label(registrationForm.email, 'Email', {'label_attr': {'class': 'fs-5 mt-3'}}) }}
+			{{ form_widget(registrationForm.email, { 'attr': {'class': 'border border-primary border-1'} }) }}
+			{{ form_label(registrationForm.plainPassword, 'Mot de passe', {'label_attr': {'class': 'fs-5 mt-3'}}) }}
+			{{ form_widget(registrationForm.plainPassword) }}
+			<div class="w-50 m-auto my-4">
+				<button class="btn btn-primary text-dark w-100 rounded-5 my-4" type="submit">Valider</button>
+				{{ form_end(registrationForm) }}
+				<a class="btn btn-outline-primary text-dark w-100 rounded-5 mb-4" href="{{ path('app_login') }}">Retour</a>
+			</div>
+		</div>
+	</main>
+{% endblock %}
+{% block navbar %}{% endblock %}
