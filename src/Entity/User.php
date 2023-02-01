@@ -50,6 +50,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?float $tempWeight = null;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Need $need = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $activityRate = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $fatRate = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $age = null;
+
     public function __construct()
     {
         $this->weight = new ArrayCollection();
@@ -223,6 +235,64 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setTempWeight(?float $tempWeight): self
     {
         $this->tempWeight = $tempWeight;
+
+        return $this;
+    }
+
+    public function getNeed(): ?Need
+    {
+        return $this->need;
+    }
+
+    public function setNeed(?Need $need): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($need === null && $this->need !== null) {
+            $this->need->setUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($need !== null && $need->getUser() !== $this) {
+            $need->setUser($this);
+        }
+
+        $this->need = $need;
+
+        return $this;
+    }
+
+    public function getActivityRate(): ?float
+    {
+        return $this->activityRate;
+    }
+
+    public function setActivityRate(?float $activityRate): self
+    {
+        $this->activityRate = $activityRate;
+
+        return $this;
+    }
+
+    public function getFatRate(): ?int
+    {
+        return $this->fatRate;
+    }
+
+    public function setFatRate(?int $fatRate): self
+    {
+        $this->fatRate = $fatRate;
+
+        return $this;
+    }
+
+    public function getAge(): ?int
+    {
+        return $this->age;
+    }
+
+    public function setAge(?int $age): self
+    {
+        $this->age = $age;
 
         return $this;
     }
