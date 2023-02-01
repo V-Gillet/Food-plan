@@ -35,17 +35,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $lastname = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $height = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $goal = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $sexe = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: WeightHistory::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: WeightHistory::class, cascade: ['persist'])]
     private Collection $weight;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $tempWeight = null;
 
     public function __construct()
     {
@@ -151,7 +154,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->height;
     }
 
-    public function setHeight(float $height): self
+    public function setHeight(?float $height): self
     {
         $this->height = $height;
 
@@ -163,7 +166,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->goal;
     }
 
-    public function setGoal(string $goal): self
+    public function setGoal(?string $goal): self
     {
         $this->goal = $goal;
 
@@ -175,7 +178,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->sexe;
     }
 
-    public function setSexe(string $sexe): self
+    public function setSexe(?string $sexe): self
     {
         $this->sexe = $sexe;
 
@@ -208,6 +211,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $weight->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTempWeight(): ?float
+    {
+        return $this->tempWeight;
+    }
+
+    public function setTempWeight(?float $tempWeight): self
+    {
+        $this->tempWeight = $tempWeight;
 
         return $this;
     }
