@@ -40,8 +40,9 @@
 {% endblock %}
 {% block body %}
 	<main class="container-fluid">
-		<div class="bg-white box-shadow rounded-4 my-4">
-			{% if app.user.height %}
+
+		{% if app.user.height %}
+			<div class="bg-white box-shadow rounded-4 my-4">
 				<div class="d-flex justify-content-center py-3">
 					<h2 class="font-title px-2 mb-0">Mon objectif journalier</h2>
 					<div class="d-flex align-items-center badge bg-white border border-2 border-primary rounded-pill text-primary text-center">
@@ -78,8 +79,17 @@
 						</p>
 					</div>
 				</div>
-			{% else %}
-
+			</div>
+			<div class="bg-white box-shadow rounded-4 my-4 position-relative d-flex justify-content-center">
+				{{ render_chart(caloriesChart, {'class': 'calories-chart'}) }}
+				<p class="text-center position-absolute top-50 start-50 translate-middle">
+					XXX
+					<br>
+					Calories restantes
+				</p>
+			</div>
+		{% else %}
+			<div class="bg-white box-shadow rounded-4 my-4">
 				<h1 class="text-center fs-2 pt-4 pb-3 px-3">Avant de commencer, nous avons besoin de quelques informations pour vous aider !</h1>
 				<div class="container">
 					{{ form_start(form) }}
@@ -109,7 +119,7 @@
 					</div>
 					{{ form_end(form) }}
 				</div>
-			{% endif %}
-		</div>
+			</div>
+		{% endif %}
 	</main>
 {% endblock %}

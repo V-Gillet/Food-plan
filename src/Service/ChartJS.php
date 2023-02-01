@@ -72,4 +72,67 @@ class ChartJS
 
         return $chart;
     }
+
+    public function gainCaloriesChart(User $user): Chart
+    {
+        $chart = $this->chartBuilder->createChart(Chart::TYPE_DOUGHNUT);
+
+        $chart->setData([
+            'datasets' => [
+                [
+                    'label' => 'My First dataset',
+                    'backgroundColor' => [
+                        '#45DB2E',
+                        '#EBEBEB'
+                    ],
+                    // put the consummed calories here
+                    'data' => [$user->getNeed()->getGainCalory(), 1],
+                ],
+            ],
+        ]);
+
+        return $chart;
+    }
+
+    public function leanCaloriesChart(User $user): Chart
+    {
+        $chart = $this->chartBuilder->createChart(Chart::TYPE_DOUGHNUT);
+
+        $chart->setData([
+            'datasets' => [
+                [
+                    'label' => 'My First dataset',
+                    'backgroundColor' => [
+                        '#45DB2E',
+                        '#EBEBEB'
+                    ],
+                    // put the consummed calories here
+                    'data' => [$user->getNeed()->getLossCalory(), 1],
+                ],
+            ],
+        ]);
+
+        return $chart;
+    }
+
+    public function maintenanceCaloriesChart(User $user): Chart
+    {
+        $chart = $this->chartBuilder->createChart(Chart::TYPE_DOUGHNUT);
+
+        $chart->setData([
+            'datasets' => [
+                [
+                    'label' => 'My First dataset',
+                    'backgroundColor' => [
+                        '#45DB2E',
+                        '#EBEBEB'
+                    ],
+                    // put the consummed calories here
+                    'data' => [$user->getNeed()->getMaintenanceCalory(), 1],
+                ],
+            ],
+        ]);
+
+        return $chart;
+    }
 }

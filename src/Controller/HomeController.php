@@ -61,13 +61,20 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
-
+        if ($user->getGoal() === 'gain') {
+            $caloriesChart = $chartJS->gainCaloriesChart($user);
+        } elseif ($user->getGoal() === 'lean') {
+            $caloriesChart = $chartJS->leanCaloriesChart($user);
+        } else {
+            $caloriesChart = $chartJS->maintenanceCaloriesChart($user);
+        }
 
         return $this->render('home/index.html.twig', [
             'form' => $form,
             'proteinChart' => $chartJS->proteinChart($user),
             'lipidChart' => $chartJS->lipidChart($user),
-            'carbChart' => $chartJS->carbChart($user)
+            'carbChart' => $chartJS->carbChart($user),
+            'caloriesChart' => $caloriesChart
         ]);
     }
 }
