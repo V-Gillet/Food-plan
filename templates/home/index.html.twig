@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block header %}
-	<header class="bg-white d-flex align-items-center justify-content-between py-3 px-1 rounded-4 box-shadow">
+	<header class="bg-white d-flex align-items-center justify-content-between py-3 px-1 rounded-bottom box-shadow">
 		<div class="d-flex align-items-center">
 			<p class=" font-title text-primary fs-1 m-0 px-1">Food Plan</p>
 			<svg width="40" height="42" viewbox="0 0 133 138" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,7 +24,7 @@
 {% endblock %}
 {% block body %}
 	<main class="container-fluid">
-		<div class="bg-white box-shadow rounded-4 my-2">
+		<div class="bg-white box-shadow rounded-4 my-4">
 			{% if app.user.height %}
 				<div class="example-wrapper text-center">
 					<h1>Hello
@@ -48,7 +48,7 @@
 
 			{% else %}
 
-				<h1 class="text-center mt-5 fs-2">Avant de commencer, nous avons besoin de quelques informations pour vous aider !</h1>
+				<h1 class="text-center fs-2 py-2">Avant de commencer, nous avons besoin de quelques informations pour vous aider !</h1>
 				<div class="container">
 					{{ form_start(form) }}
 					<div class="my-5">

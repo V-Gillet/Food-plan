@@ -18,5 +18,8 @@
 		{% endblock %}
 	</head>
 	<body class="bg-cinco"> {% block header %}{% endblock %}{% block body %}{% endblock %}
-		</body>
-	</html>
+		{% block navbar %}
+			{% include "components/_navbar.html.twig" %}
+		{% endblock %}
+	</body>
+</html>
