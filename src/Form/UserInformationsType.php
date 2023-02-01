@@ -24,7 +24,7 @@ class UserInformationsType extends AbstractType
                 'height',
                 NumberType::class,
                 [
-                    'label' => 'Votre Taille',
+                    'label' => 'Votre Taille en (en cm)',
                     'attr' => [
                         'class' => ' border border-primary border-1',
                     ],
@@ -37,7 +37,7 @@ class UserInformationsType extends AbstractType
                 'tempWeight',
                 NumberType::class,
                 [
-                    'label' => 'Votre poids',
+                    'label' => 'Votre poids (en kg)',
                     'attr' => [
                         'class' => ' border border-primary border-1',
                     ],
@@ -46,6 +46,61 @@ class UserInformationsType extends AbstractType
                     ],
                 ]
             )
+            ->add(
+                'fatRate',
+                NumberType::class,
+                [
+                    'label' => 'Votre taux de masse graisseuse (en %)',
+                    'attr' => [
+                        'class' => ' border border-primary border-1',
+                    ],
+                    'label_attr' => [
+                        'class' => 'fs-5'
+                    ],
+                ]
+            )
+            ->add('activityRate', ChoiceType::class, [
+                'choices'  => [
+                    'Peu ou pas d\'exercice' => 1.1,
+                    '1 à 2 fois par semaine' => 1.2,
+                    '3 à 5 fois par semaine' => 1.35,
+                    '6 à 7 fois par semaine' => 1.45,
+                    '7 fois par semaine et travail physique' => 1.7
+                ],
+                'label' => 'Votre taux d\'activité par semaine',
+                'label_attr' => [
+                    'class' => 'fs-5'
+                ],
+                'attr' => [
+                    'class' => ' border border-primary border-1',
+                ],
+            ])
+            ->add(
+                'age',
+                NumberType::class,
+                [
+                    'label' => 'Votre âge (en années)',
+                    'attr' => [
+                        'class' => ' border border-primary border-1',
+                    ],
+                    'label_attr' => [
+                        'class' => 'fs-5'
+                    ],
+                ]
+            )
+            ->add('sexe', ChoiceType::class, [
+                'choices'  => [
+                    'Homme' => 'male',
+                    'Femme' => 'female'
+                ],
+                'label' => 'Votre sexe',
+                'attr' => [
+                    'class' => ' border border-primary border-1',
+                ],
+                'label_attr' => [
+                    'class' => 'fs-5'
+                ],
+            ])
             ->add('goal', ChoiceType::class, [
                 'choices'  => [
                     'Maitenance' => 'maitenance',
@@ -58,19 +113,6 @@ class UserInformationsType extends AbstractType
                 ],
                 'attr' => [
                     'class' => ' border border-primary border-1',
-                ],
-            ])
-            ->add('sexe', ChoiceType::class, [
-                'choices'  => [
-                    'Homme' => 'male',
-                    'Femme' => 'female'
-                ],
-                'label' => 'Votre sexe',
-                'attr' => [
-                    'class' => ' border border-primary border-1',
-                ],
-                'label_attr' => [
-                    'class' => 'fs-5'
                 ],
             ]);
     }

@@ -4,67 +4,108 @@
 	{% if app.user.height %}
 		Tableau de bord
 	{% else %}
-		Vos information
+		Vos informations
 	{% endif %}
 {% endblock %}
 
 {% block header %}
-	<header class="bg-white d-flex align-items-center justify-content-between py-3 px-1 rounded-bottom box-shadow">
-		<div class="d-flex align-items-center">
-			<p class=" font-title text-primary fs-1 m-0 px-1">Food Plan</p>
-			<svg width="40" height="42" viewbox="0 0 133 138" fill="none" xmlns="http://www.w3.org/2000/svg">
-				<path d="M65.1239 6.70948C67.6463 12.4422 63.9774 31.7043 63.9774 31.7043C63.9774 31.7043 46.7791 21.6147 44.2567 15.8819C41.7343 10.1491 44.2567 3.49914 49.9894 0.976722C55.7222 -1.54569 62.6015 0.976722 65.1239 6.70948Z" fill="#64892F"/>
-				<path d="M69.4809 32.8505H63.5189C63.5189 22.9901 69.0223 6.25049 91.0361 6.25049V12.2126C71.0861 12.2126 69.4809 31.016 69.4809 32.8505Z" fill="#947151"/>
-				<path d="M66.5 31.7037C49.7603 14.7347 0 14.0468 0 62.6606C0 93.3882 36.231 137.645 52.0535 137.645C59.1621 137.645 61.6845 133.059 66.0414 133.059C70.169 133.059 71.5448 137.416 80.7172 137.416C96.5397 137.645 133 93.6175 133 62.6606C133 14.0468 83.2397 14.7347 66.5 31.7037Z" fill="#46DC2E"/>
-			</svg>
-		</div>
+	{% if app.user.height %}
+		<header class="bg-white d-flex align-items-center justify-content-between py-3 px-1 rounded-bottom box-shadow">
+			<div class="d-flex align-items-center">
+				<p class=" font-title text-primary fs-1 m-0 px-1">Food Plan</p>
+				<svg width="40" height="42" viewbox="0 0 133 138" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M65.1239 6.70948C67.6463 12.4422 63.9774 31.7043 63.9774 31.7043C63.9774 31.7043 46.7791 21.6147 44.2567 15.8819C41.7343 10.1491 44.2567 3.49914 49.9894 0.976722C55.7222 -1.54569 62.6015 0.976722 65.1239 6.70948Z" fill="#64892F"/>
+					<path d="M69.4809 32.8505H63.5189C63.5189 22.9901 69.0223 6.25049 91.0361 6.25049V12.2126C71.0861 12.2126 69.4809 31.016 69.4809 32.8505Z" fill="#947151"/>
+					<path d="M66.5 31.7037C49.7603 14.7347 0 14.0468 0 62.6606C0 93.3882 36.231 137.645 52.0535 137.645C59.1621 137.645 61.6845 133.059 66.0414 133.059C70.169 133.059 71.5448 137.416 80.7172 137.416C96.5397 137.645 133 93.6175 133 62.6606C133 14.0468 83.2397 14.7347 66.5 31.7037Z" fill="#46DC2E"/>
+				</svg>
+			</div>
 
-		<p class="font-title fs-2 m-0">Définition du besoin</p>
-	</header>
+			<h1 class="fs-2 m-0">Tableau de bord</h1>
+		</header>
+	{% else %}
+		<header class="bg-white d-flex align-items-center justify-content-between py-3 px-1 rounded-bottom box-shadow">
+			<div class="d-flex align-items-center">
+				<p class=" font-title text-primary fs-1 m-0 px-1">Food Plan</p>
+				<svg width="40" height="42" viewbox="0 0 133 138" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M65.1239 6.70948C67.6463 12.4422 63.9774 31.7043 63.9774 31.7043C63.9774 31.7043 46.7791 21.6147 44.2567 15.8819C41.7343 10.1491 44.2567 3.49914 49.9894 0.976722C55.7222 -1.54569 62.6015 0.976722 65.1239 6.70948Z" fill="#64892F"/>
+					<path d="M69.4809 32.8505H63.5189C63.5189 22.9901 69.0223 6.25049 91.0361 6.25049V12.2126C71.0861 12.2126 69.4809 31.016 69.4809 32.8505Z" fill="#947151"/>
+					<path d="M66.5 31.7037C49.7603 14.7347 0 14.0468 0 62.6606C0 93.3882 36.231 137.645 52.0535 137.645C59.1621 137.645 61.6845 133.059 66.0414 133.059C70.169 133.059 71.5448 137.416 80.7172 137.416C96.5397 137.645 133 93.6175 133 62.6606C133 14.0468 83.2397 14.7347 66.5 31.7037Z" fill="#46DC2E"/>
+				</svg>
+			</div>
+
+			<h1 class="fs-2 m-0">Définition du besoin</h1>
+		</header>
+	{% endif %}
+
 {% endblock %}
 {% block body %}
 	<main class="container-fluid">
 		<div class="bg-white box-shadow rounded-4 my-4">
 			{% if app.user.height %}
-				<div class="example-wrapper text-center">
-					<h1>Hello
-					</h1>
-
-					This friendly message is coming from:
-					<ul>
-						<li>Your controller at
-							<code>
-								<a href="{{ '/home/vgillet/Symfony-initialized/base_project_bootstrap/src/Controller/HomeController.php'|file_link(0) }}">src/Controller/HomeController.php</a>
-							</code>
-						</li>
-						<li>Your template at
-							<code>
-								<a href="{{ '/home/vgillet/Symfony-initialized/base_project_bootstrap/templates/home/index.html.twig'|file_link(0) }}">templates/home/index.html.twig</a>
-							</code>
-						</li>
-					</ul>
-					<a href="{{ path("app_logout") }}">Disconnect</a>
+				<div class="d-flex justify-content-center py-3">
+					<h2 class="font-title px-2 mb-0">Mon objectif journalier</h2>
+					<div class="d-flex align-items-center badge bg-white border border-2 border-primary rounded-pill text-primary text-center">
+						{% if app.user.goal == 'lean' %}
+							Perte de poids
+						{% elseif  app.user.goal == 'gain' %}
+							Prise de masse
+						{% else %}
+							Maintenance
+						{% endif %}
+					</div>
 				</div>
-
+				<div class="d-flex justify-content-around">
+					<div>
+						{{ render_chart(proteinChart, {'class': 'repartition-chart'}) }}
+						<p class="text-center">{{app.user.need.protein}}
+							<br>
+							Protéines
+						</p>
+					</div>
+					<div>
+						{{ render_chart(lipidChart, {'class': 'repartition-chart'}) }}
+						<p class="text-center">
+							{{app.user.need.lipid}}
+							<br>Lipides
+						</p>
+					</div>
+					<div>
+						{{ render_chart(carbChart, {'class': 'repartition-chart'}) }}
+						<p class="text-center">
+							{{app.user.need.carb}}
+							<br>
+							Glucides
+						</p>
+					</div>
+				</div>
 			{% else %}
 
-				<h1 class="text-center fs-2 py-2">Avant de commencer, nous avons besoin de quelques informations pour vous aider !</h1>
+				<h1 class="text-center fs-2 pt-4 pb-3 px-3">Avant de commencer, nous avons besoin de quelques informations pour vous aider !</h1>
 				<div class="container">
 					{{ form_start(form) }}
-					<div class="my-5">
+					<div class="my-4">
+						{{ form_row(form.age) }}
+					</div>
+					<div class="my-4">
 						{{ form_row(form.height) }}
 					</div>
-					<div class="my-5">
+					<div class="my-4">
 						{{ form_row(form.tempWeight) }}
 					</div>
-					<div class="my-5">
+					<div class="my-4">
+						{{ form_row(form.fatRate) }}
+					</div>
+					<div class="my-4">
 						{{ form_row(form.sexe) }}
 					</div>
-					<div class="my-5">
+					<div class="my-4">
+						{{ form_row(form.activityRate) }}
+					</div>
+					<div class="my-4">
 						{{ form_row(form.goal) }}
 					</div>
 					<div class="d-flex justify-content-center">
-						<button class="btn btn-primary text-dark rounded-4 fs-6 mb-2" type="submit">Commencer mon suivi</button>
+						<button class="btn btn-primary text-dark rounded-4 fs-6 mb-3" type="submit">Commencer mon suivi</button>
 					</div>
 					{{ form_end(form) }}
 				</div>
