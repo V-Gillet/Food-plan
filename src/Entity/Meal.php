@@ -5,11 +5,14 @@ namespace App\Entity;
 use App\Repository\MealRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MealRepository::class)]
 class Meal
 {
+    public const MEAL_TYPE = ['Petit-déjeuner', 'Déjeuner', 'En-cas', 'Diner'];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -18,7 +21,7 @@ class Meal
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(length: 100, nullable: true)]
@@ -44,6 +47,9 @@ class Meal
 
     #[ORM\OneToMany(mappedBy: 'meal', targetEntity: MealUser::class)]
     private Collection $mealUsers;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $date = null;
 
     public function __construct()
     {
@@ -189,6 +195,18 @@ class Meal
                 $mealUser->setMeal(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTimeInterface $date): self
+    {
+        $this->date = $date;
 
         return $this;
     }

@@ -60,20 +60,30 @@ class HomeController extends AbstractController
 
             return $this->redirectToRoute('app_home');
         }
-
-        if ($user->getGoal() === 'gain') {
-            $caloriesChart = $chartJS->gainCaloriesChart($user);
-        } elseif ($user->getGoal() === 'lean') {
-            $caloriesChart = $chartJS->leanCaloriesChart($user);
+        if ($user->getNeed() !== null) {
+            if ($user->getGoal() === 'gain') {
+                $caloriesChart = $chartJS->gainCaloriesUserChart($user);
+            } elseif ($user->getGoal() === 'lean') {
+                $caloriesChart = $chartJS->leanCaloriesUserChart($user);
+            } else {
+                $caloriesChart = $chartJS->maintenanceCaloriesUserChart($user);
+            }
+            $proteinChart = $chartJS->proteinUserChart($user);
+            $lipidChart = $chartJS->lipidUserChart($user);
+            $carbChart = $chartJS->carbUserChart($user);
         } else {
-            $caloriesChart = $chartJS->maintenanceCaloriesChart($user);
+            $proteinChart = '';
+            $lipidChart = '';
+            $carbChart = '';
+            $caloriesChart = '';
         }
+
 
         return $this->render('home/index.html.twig', [
             'form' => $form,
-            'proteinChart' => $chartJS->proteinChart($user),
-            'lipidChart' => $chartJS->lipidChart($user),
-            'carbChart' => $chartJS->carbChart($user),
+            'proteinChart' => $proteinChart,
+            'lipidChart' => $lipidChart,
+            'carbChart' => $carbChart,
             'caloriesChart' => $caloriesChart
         ]);
     }
