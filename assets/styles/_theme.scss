@@ -70,9 +70,29 @@ button{
     max-height : 500px;    
 }
 
+.card-img{
+    max-height : 500px;  
+    object-fit: cover;   
+}
+
+.view-img{
+    max-width : 150px;
+    max-height : 300px;   
+    object-fit: cover;     
+}
+
 @media screen and (max-width: 500px){
     .calories-chart{
         max-width : 300px;
         max-height : 300px;    
     }
 }
+
+@media screen and (max-width: 768px){
+    .card-img{
+        max-height : 200px; 
+        width: auto;
+        object-fit: cover;   
+    }
+}
+

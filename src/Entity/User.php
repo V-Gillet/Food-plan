@@ -62,9 +62,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?int $age = null;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: MealUser::class)]
+    private Collection $mealUsers;
+
     public function __construct()
     {
         $this->weight = new ArrayCollection();
+        $this->mealUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -293,6 +297,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAge(?int $age): self
     {
         $this->age = $age;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MealUser>
+     */
+    public function getMealUsers(): Collection
+    {
+        return $this->mealUsers;
+    }
+
+    public function addMealUser(MealUser $mealUser): self
+    {
+        if (!$this->mealUsers->contains($mealUser)) {
+            $this->mealUsers->add($mealUser);
+            $mealUser->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMealUser(MealUser $mealUser): self
+    {
+        if ($this->mealUsers->removeElement($mealUser)) {
+            // set the owning side to null (unless already changed)
+            if ($mealUser->getUser() === $this) {
+                $mealUser->setUser(null);
+            }
+        }
 
         return $this;
     }

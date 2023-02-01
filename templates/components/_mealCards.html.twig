@@ -1,0 +1,22 @@
+<div class="bg-white box-shadow rounded-4 my-4">
+	<a class="card mb-3 text-decoration-none" href="{{ path("app_meal_show", {'meal': meal.id}) }}">
+		<div class="row g-0">
+			<div class="col-md-4">
+				<img src="{{ asset('build/images/placeholder.jpg') }}" class="img-fluid rounded-start card-img" alt="...">
+			</div>
+			<div class="col-md-8">
+				<div class="card-body">
+					<div class="d-flex justify-content-between align-items-center">
+						<h2 class="card-title font-title fs-2 text-dark">{{meal.name}}</h2>
+						<div class="badge bg-white border border-2 border-primary rounded-pill text-primary text-center">{{meal.origin|country_name('fr')}}</div>
+					</div>
+					<p class="fs-5 text-primary">
+						Consommé le :
+						{{meal.date|date("d/m/Y")}}</p>
+
+					<p class="card-text text-dark">{{meal.description|u.truncate(100, '...')}}</p>
+				</div>
+			</div>
+		</div>
+	</a>
+</div>
