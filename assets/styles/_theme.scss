@@ -1,14 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Jacques+Francois&family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&family=Marko+One&display=swap');
+
+$font-content: 'Jacques Francois', serif;
+$font-title: 'Lobster Two', cursive;
+$font-subTitle: 'Marko One', serif;
 $primary : #45DB2E;
 $secondary : #F4B357;
 $tertiary : #6CB6E2;
 $quatro : #CA332F;
+$cinco : #F7FFF6;
 
 // Tableau de couleurs personalisées
 $custom-colors: (
     "tertiary": $tertiary,
     "quatro": $quatro,
     "cinco": $cinco,
-    "darkGrey" : $darkGrey,
 );
 
 // Import des parties "fonctions" (car on utilise la fonction map-merge()) 
@@ -21,3 +26,32 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
 
 // Import du reste de bootstrap dans lequel il aura ajoute les custom colors
 @import "~bootstrap/scss/bootstrap";
+
+h1{
+    font-family: $font-title;
+}
+
+p{
+    font-family: $font-content;
+}
+
+a{
+    font-family: $font-subTitle;
+}
+
+.font-title{
+    font-family: $font-title;
+}
+
+.box-shadow{
+    filter: drop-shadow(0px 2px rgba(0, 0, 0, 0.1));
+}
+
+button{
+    font-family : inherit;
+    font-family: $font-subTitle !important;
+}
+
+.form-label{
+    font-family: $font-title;
+}

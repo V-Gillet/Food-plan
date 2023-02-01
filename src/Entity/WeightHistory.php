@@ -21,7 +21,6 @@ class WeightHistory
     private ?\DateTimeInterface $date = null;
 
     #[ORM\ManyToOne(inversedBy: 'weight')]
-    #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
     public function getId(): ?int
