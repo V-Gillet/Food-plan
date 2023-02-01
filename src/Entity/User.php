@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -26,6 +28,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $firstname = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $lastname = null;
+
+    #[ORM\Column]
+    private ?float $height = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $goal = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $sexe = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: WeightHistory::class, orphanRemoval: true)]
+    private Collection $weight;
+
+    public function __construct()
+    {
+        $this->weight = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -95,5 +120,95 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function setFirstname(string $firstname): self
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): self
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getHeight(): ?float
+    {
+        return $this->height;
+    }
+
+    public function setHeight(float $height): self
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    public function getGoal(): ?string
+    {
+        return $this->goal;
+    }
+
+    public function setGoal(string $goal): self
+    {
+        $this->goal = $goal;
+
+        return $this;
+    }
+
+    public function getSexe(): ?string
+    {
+        return $this->sexe;
+    }
+
+    public function setSexe(string $sexe): self
+    {
+        $this->sexe = $sexe;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WeightHistory>
+     */
+    public function getWeight(): Collection
+    {
+        return $this->weight;
+    }
+
+    public function addWeight(WeightHistory $weight): self
+    {
+        if (!$this->weight->contains($weight)) {
+            $this->weight->add($weight);
+            $weight->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWeight(WeightHistory $weight): self
+    {
+        if ($this->weight->removeElement($weight)) {
+            // set the owning side to null (unless already changed)
+            if ($weight->getUser() === $this) {
+                $weight->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
