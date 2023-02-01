@@ -31,6 +31,13 @@ class RegistrationType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
+                'label' => 'Mot de passe',
+                'label_attr' => [
+                    'class' => 'fs-5'
+                ],
+                'attr' => [
+                    'class' => ' border border-primary border-1',
+                ],
             ]);
     }
 
