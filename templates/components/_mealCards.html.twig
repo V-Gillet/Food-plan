@@ -8,7 +8,7 @@
 				<div class="card-body">
 					<div class="d-flex justify-content-between align-items-center">
 						<h2 class="card-title font-title fs-2 text-dark">{{meal.name}}</h2>
-						<div class="badge bg-white border border-2 border-primary rounded-pill text-primary text-center">{{meal.origin}}</div>
+						<div class="badge bg-white border border-2 border-primary rounded-pill text-primary text-center">{{meal.origin|country_name('fr')}}</div>
 					</div>
 					<p class="fs-5 text-primary">
 						Consommé le :

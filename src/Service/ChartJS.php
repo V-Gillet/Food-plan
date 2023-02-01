@@ -169,7 +169,7 @@ class ChartJS
                         '#6CB6E2',
                         '#EBEBEB'
                     ],
-                    'data' => [$meal->getProtein(), ($meal->getProtein() + $meal->getLipid() + $meal->getCarb())],
+                    'data' => [$meal->getLipid(), ($meal->getProtein() + $meal->getLipid() + $meal->getCarb())],
                 ],
             ],
         ]);
@@ -189,7 +189,7 @@ class ChartJS
                         '#CA332F',
                         '#EBEBEB'
                     ],
-                    'data' => [$meal->getProtein(), ($meal->getProtein() + $meal->getLipid() + $meal->getCarb())],
+                    'data' => [$meal->getCarb(), ($meal->getProtein() + $meal->getLipid() + $meal->getCarb())],
                 ],
             ],
         ]);

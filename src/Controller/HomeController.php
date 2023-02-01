@@ -2,19 +2,21 @@
 
 namespace App\Controller;
 
-use App\Entity\Need;
 use DateTime;
+use App\Entity\Need;
+use App\Service\ChartJS;
 use App\Entity\WeightHistory;
+use App\Service\NeedsCalculator;
 use App\Form\UserInformationsType;
 use App\Repository\NeedRepository;
 use App\Repository\UserRepository;
-use App\Service\ChartJS;
-use App\Service\NeedsCalculator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[IsGranted('ROLE_USER')]
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]

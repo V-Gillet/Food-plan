@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Meal
+{% endblock %}
+
+{% block body %}
+	<h1>Edit Meal</h1>
+
+	{{ include('diary/_form.html.twig', {'button_label': 'Update'}) }}
+
+	<a href="{{ path('app_diary') }}">back to list</a>
+
+	{{ include('diary/_delete_form.html.twig') }}
+{% endblock %}

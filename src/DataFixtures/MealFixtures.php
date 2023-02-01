@@ -21,8 +21,8 @@ class MealFixtures extends Fixture
         for ($i = 0; $i < 20; $i++) {
             $meal = new Meal();
             $meal->setName($faker->words(3, true));
-            $meal->setDescription($faker->sentence($faker->randomNumber(2, true)));
-            $meal->setOrigin($faker->country());
+            $meal->setDescription($faker->sentence($faker->randomNumber(3, true)));
+            $meal->setOrigin($faker->countryCode());
             $meal->setLipid($faker->numberBetween(2, 40));
             $meal->setProtein($faker->numberBetween(20, 60));
             $meal->setCarb($faker->numberBetween(20, 150));

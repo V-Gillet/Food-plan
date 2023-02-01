@@ -3,14 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Meal;
+use App\Form\MealType;
 use App\Service\ChartJS;
 use App\Repository\MealRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/diary')]
+#[IsGranted('ROLE_USER')]
 class DiaryController extends AbstractController
 {
     public const MEAL_LIMIT = 20;
@@ -32,7 +35,7 @@ class DiaryController extends AbstractController
         );
     }
 
-    #[Route('/{meal}', name: 'app_meal_show')]
+    #[Route('/voir/{meal}', name: 'app_meal_show')]
     public function show(
         Meal $meal,
         ChartJS $chartJS
@@ -65,7 +68,7 @@ class DiaryController extends AbstractController
             return $this->redirectToRoute('app_diary', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('meal/new.html.twig', [
+        return $this->render('diary/new.html.twig', [
             'meal' => $meal,
             'form' => $form,
         ]);
@@ -80,22 +83,22 @@ class DiaryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $mealRepository->save($meal, true);
 
-            return $this->redirectToRoute('app_meal_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_diary', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('meal/edit.html.twig', [
+        return $this->render('diary/edit.html.twig', [
             'meal' => $meal,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{meal}', name: 'app_meal_delete', methods: ['POST'])]
+    #[Route('/supprimer/{meal}', name: 'app_meal_delete', methods: ['POST'])]
     public function delete(Request $request, Meal $meal, MealRepository $mealRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $meal->getId(), $request->request->get('_token'))) {
             $mealRepository->remove($meal, true);
         }
 
-        return $this->redirectToRoute('app_meal_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_diary', [], Response::HTTP_SEE_OTHER);
     }
 }

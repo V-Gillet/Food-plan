@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Meal;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,10 +20,13 @@ class MealType extends AbstractType
             ->add('carb')
             ->add('protein')
             ->add('calories')
-            ->add('type')
+            ->add(
+                'type',
+                ChoiceType::class,
+                []
+            )
             ->add('isRecipe')
-            ->add('date')
-        ;
+            ->add('date');
     }
 
     public function configureOptions(OptionsResolver $resolver): void
