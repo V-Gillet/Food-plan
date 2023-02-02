@@ -20,7 +20,6 @@ class ComsumptionCalculator
         $today = new DateTime('today');
 
         $mealsUsers = $this->mealUserRepository->findBy(['user' => $user, 'date' => $today]);
-
         $totalCalory = 0;
         foreach ($mealsUsers as $mealUser) {
             $totalCalory += $mealUser->getMeal()->getCalories();

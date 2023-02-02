@@ -19,9 +19,13 @@
 {% endblock %}
 {% block body %}
 	<main class="container-fluid">
-		<div class="bg-white box-shadow rounded-4 my-4">
+		<div class="d-flex justify-content-center">
+			<a class="btn btn-tertiary my-4" href="{{ path('app_diary') }}">Retour</a>
+		</div>
+		<div class="bg-white box-shadow rounded-4 py-1">
+			<h1 class="text-center mt-3 mb-4">Nouveau Repas</h1>
 			{{ include('diary/_form.html.twig') }}
 		</div>
-		<a href="{{ path('app_diary') }}">back to list</a>
+
 	</main>
 {% endblock %}

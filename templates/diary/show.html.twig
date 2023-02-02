@@ -48,8 +48,8 @@
 			</div>
 		</div>
 		<div class="d-flex justify-content-center">
-			<a href="{{ path("app_meal_edit", {'meal': meal.id}) }}" class="btn btn-tertiary text-white rounded-4 m-2">Modifier le repas</a>
-			<a href="{{ path("app_meal_delete", {'meal': meal.id}) }}" class="btn btn-quatro text-white rounded-4 m-2">Supprimer le repas</a>
+			<a href="{{ path("app_meal_edit", {'meal': meal.id}) }}" class="btn btn-tertiary text-white rounded-5 m-2">Modifier le repas</a>
+			<a href="{{ path("app_meal_delete", {'id': meal.id}) }}" class="btn btn-quatro text-white rounded-5 m-2">Supprimer le repas</a>
 		</div>
 		<div class="bg-white box-shadow rounded-4 my-4 row px-2 g-0">
 			<img class="img-fluid col-3 col-md-12 view-img rounded-4" src="{{ asset('build/images/placeholder.jpg') }}" alt="image du repas {{meal.name}}">
@@ -58,8 +58,9 @@
 
 				<div class="badge bg-white border border-2 border-secondary rounded-pill text-secondary text-center mt-2">{{meal.origin|country_name('fr')}}</div>
 				<div class="badge bg-white border border-2 border-tertiary rounded-pill text-tertiary text-center mt-2">{{meal.type}}</div>
-				<div class="badge bg-white border border-2 border-quatro rounded-pill text-quatro text-center mb-4 mt-1">Favoris</div>
-
+				{% if meal.isFavourite == true %}
+					<div class="badge bg-white border border-2 border-quatro rounded-pill text-quatro text-center mb-4 mt-1">Favoris</div>
+				{% endif %}
 			</div>
 			<p class="fs-6 p-2 px-3">{{meal.description}}</p>
 

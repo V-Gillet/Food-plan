@@ -23,10 +23,11 @@
 		<div class="bg-white box-shadow rounded-4 my-4">
 			<div>Searchbar</div>
 		</div>
-		<a href="{{ path("app_meal_new") }}" class="btn btn-primary text-white rounded-4">Ajouter un repas</a>
+		<div class="d-flex justify-content-center">
+			<a href="{{ path("app_meal_new") }}" class="btn btn-primary text-white rounded-5">Ajouter un repas</a>
+		</div>
 		{% for mealUser in mealsUser %}
 			{% include 'components/_mealCards.html.twig' %}
 		{% endfor %}
-
 	</main>
 {% endblock %}
