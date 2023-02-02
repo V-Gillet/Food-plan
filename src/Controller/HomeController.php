@@ -3,16 +3,17 @@
 namespace App\Controller;
 
 use DateTime;
+use DateInterval;
 use App\Entity\Need;
 use App\Service\ChartJS;
 use App\Entity\WeightHistory;
+use App\Form\WeightHistoryType;
 use App\Service\NeedsCalculator;
 use App\Form\UserInformationsType;
-use App\Form\WeightHistoryType;
 use App\Repository\NeedRepository;
 use App\Repository\UserRepository;
-use App\Repository\WeightHistoryRepository;
 use App\Service\ComsumptionCalculator;
+use App\Repository\WeightHistoryRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -40,18 +41,23 @@ class HomeController extends AbstractController
         $form = $this->createForm(UserInformationsType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $weight = new WeightHistory;
+            // TODO : manage epty historyWeight without setting false datas
+            for ($i = 6; $i >= 0; $i--) {
+                $now = new DateTime('today');
+                $dateinterval = new DateInterval('P' . $i . 'D');
+                $weight = new WeightHistory;
+                /** @var DateTime */
+                $weightDate = $now->sub($dateinterval);
+                /** @var float */
+                $tempWeight = $form->getData()->getTempWeight();
 
-            /** @var float */
-            $tempWeight = $form->getData()->getTempWeight();
+                $weight->setUser($user);
+                $weight->setWeight($tempWeight);
+                $weight->setDate($weightDate);
 
-            $weight->setUser($user);
-            $weight->setWeight($tempWeight);
-            $weight->setDate($today);
-
-            $user->addWeight($weight);
-            $userRepository->save($user, true);
-
+                $user->addWeight($weight);
+                $userRepository->save($user, true);
+            }
             $need = new Need;
             $need->setUser($user);
             $need->setMaintenanceCalory($needsCalculator->getMaintenanceCalories($user));

@@ -6,6 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\WeightHistoryRepository;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: WeightHistoryRepository::class)]
 #[UniqueEntity(['date', 'user'])]
@@ -17,9 +18,13 @@ class WeightHistory
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\Type('float')]
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     private ?float $weight = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\DateTime]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\ManyToOne(inversedBy: 'weight')]

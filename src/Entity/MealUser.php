@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\MealUserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MealUserRepository::class)]
 class MealUser
@@ -21,9 +22,11 @@ class MealUser
     private ?Meal $meal = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type('boolean')]
     private ?bool $isFavourite = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Assert\DateTime]
     private ?\DateTimeInterface $date = null;
 
     public function getId(): ?int

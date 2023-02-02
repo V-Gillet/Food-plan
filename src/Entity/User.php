@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -18,6 +19,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\Length(max: 180)]
+    #[Assert\NotBlank]
+    #[Assert\Email]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -30,36 +34,55 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(max: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(max: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private ?string $lastname = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type('float')]
+    #[Assert\Positive]
     private ?float $height = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Assert\Length(max: 50)]
+    #[Assert\Type('string')]
     private ?string $goal = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Assert\Length(max: 50)]
+    #[Assert\Type('string')]
     private ?string $sexe = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: WeightHistory::class, cascade: ['persist'])]
     private Collection $weight;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type('float')]
+    #[Assert\Positive]
     private ?float $tempWeight = null;
 
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Need $need = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type('float')]
     private ?float $activityRate = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type('integer')]
+    #[Assert\Positive]
     private ?int $fatRate = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type('integer')]
+    #[Assert\Positive]
     private ?int $age = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: MealUser::class)]

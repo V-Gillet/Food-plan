@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\NeedRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: NeedRepository::class)]
 class Need
@@ -14,21 +15,27 @@ class Need
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type('integer')]
     private ?int $lipid = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type('integer')]
     private ?int $carb = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type('integer')]
     private ?int $protein = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type('integer')]
     private ?int $maintenanceCalory = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type('integer')]
     private ?int $gainCalory = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type('integer')]
     private ?int $lossCalory = null;
 
     #[ORM\OneToOne(inversedBy: 'need', cascade: ['persist', 'remove'])]

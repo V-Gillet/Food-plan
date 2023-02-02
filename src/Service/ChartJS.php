@@ -94,8 +94,9 @@ class ChartJS
                     'backgroundColor' => [
                         '#EBEBEB',
                         '#45DB2E',
+
                     ],
-                    'data' => [$user->getNeed()->getGainCalory(), ($user->getNeed()->getGainCalory() - $this->consumptionCalc->totalCaloryConsummed())],
+                    'data' => [$this->consumptionCalc->totalCaloryConsummed(), $user->getNeed()->getGainCalory()],
                 ],
             ],
         ]);
@@ -115,7 +116,7 @@ class ChartJS
                         '#EBEBEB',
                         '#45DB2E',
                     ],
-                    'data' => [$user->getNeed()->getGainCalory(), ($user->getNeed()->getGainCalory() - $this->consumptionCalc->totalCaloryConsummed())],
+                    'data' => [$this->consumptionCalc->totalCaloryConsummed(), $user->getNeed()->getLossCalory()],
                 ],
             ],
         ]);
@@ -135,7 +136,7 @@ class ChartJS
                         '#EBEBEB',
                         '#45DB2E',
                     ],
-                    'data' => [$user->getNeed()->getGainCalory(), ($user->getNeed()->getGainCalory() - $this->consumptionCalc->totalCaloryConsummed())],
+                    'data' => [$this->consumptionCalc->totalCaloryConsummed(), $user->getNeed()->getMaintenanceCalory()],
                 ],
             ],
         ]);
@@ -203,7 +204,7 @@ class ChartJS
         return $chart;
     }
 
-    public function weightEvolution(User $user): Chart
+    public function weightEvolution(User $user): ?Chart
     {
         $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
 
@@ -216,37 +217,39 @@ class ChartJS
 
             $weightsHistos[] = $this->weightHistoRepo->findBy(['user' => $user, 'date' => $weightDate]);
         }
-        // dd($weightsHistos[0][0]->getWeight());
-        $chart->setData([
-            'datasets' => [
-                [
-                    'label' => 'Évolution de votre poids sur 7 jours glissants',
-                    'backgroundColor' => [
-                        '#45DB2E',
-                    ],
-                    'data' => [
-                        $weightsHistos[0][0]->getWeight(),
-                        $weightsHistos[1][0]->getWeight(),
-                        $weightsHistos[2][0]->getWeight(),
-                        $weightsHistos[3][0]->getWeight(),
-                        $weightsHistos[4][0]->getWeight(),
-                        $weightsHistos[5][0]->getWeight(),
-                        $weightsHistos[6][0]->getWeight()
+
+        if ($user->getHeight()) {
+            $chart->setData([
+                'datasets' => [
+                    [
+                        'label' => 'Évolution de votre poids sur 7 jours glissants',
+                        'backgroundColor' => [
+                            '#45DB2E',
+                        ],
+                        'data' => [
+                            $weightsHistos[0][0]->getWeight(),
+                            $weightsHistos[1][0]->getWeight(),
+                            $weightsHistos[2][0]->getWeight(),
+                            $weightsHistos[3][0]->getWeight(),
+                            $weightsHistos[4][0]->getWeight(),
+                            $weightsHistos[5][0]->getWeight(),
+                            $weightsHistos[6][0]->getWeight()
+                        ],
                     ],
                 ],
-            ],
-            'labels' => ['1er jour', '2ème jour', '3ème jour', '4ème jour', 'Avant-Hier', 'Hier', 'Aujourd\'hui'],
-        ]);
+                'labels' => ['1er jour', '2ème jour', '3ème jour', '4ème jour', 'Avant-Hier', 'Hier', 'Aujourd\'hui'],
+            ]);
 
-        $chart->setOptions([
-            'scales' => [
-                'y' => [
-                    'suggestedMin' => 50,
-                    'suggestedMax' => 100,
+            $chart->setOptions([
+                'scales' => [
+                    'y' => [
+                        'suggestedMin' => 50,
+                        'suggestedMax' => 100,
+                    ],
                 ],
-            ],
-        ]);
-
-        return $chart;
+            ]);
+            return $chart;
+        }
+        return null;
     }
 }

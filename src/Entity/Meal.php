@@ -25,30 +25,50 @@ class Meal
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(max: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Type('string')]
     private ?string $description = null;
 
     #[ORM\Column(length: 100, nullable: true)]
+    #[Assert\Type('string')]
+    #[Assert\Length(max: 100)]
     private ?string $origin = null;
 
     #[ORM\Column]
+    #[Assert\Type('integer')]
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     private ?int $lipid = null;
 
     #[ORM\Column]
+    #[Assert\Type('integer')]
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     private ?int $carb = null;
 
     #[ORM\Column]
+    #[Assert\Type('integer')]
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     private ?int $protein = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type('integer')]
+    #[Assert\Positive]
     private ?int $calories = null;
 
     #[ORM\Column(length: 100, nullable: true)]
+    #[Assert\Type('string')]
+    #[Assert\Length(max: 100)]
     private ?string $type = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type('boolean')]
     private ?bool $isRecipe = null;
 
     #[ORM\OneToMany(mappedBy: 'meal', targetEntity: MealUser::class, cascade: ['remove'])]
@@ -58,9 +78,12 @@ class Meal
     private ?DateTimeInterface $date = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type('boolean')]
     private ?bool $isFavourite = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Type('string')]
+    #[Assert\Length(max: 255)]
     private ?string $poster = null;
 
     #[Vich\UploadableField(mapping: 'poster_file', fileNameProperty: 'poster')]
