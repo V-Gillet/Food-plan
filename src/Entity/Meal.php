@@ -45,7 +45,7 @@ class Meal
     #[ORM\Column(nullable: true)]
     private ?bool $isRecipe = null;
 
-    #[ORM\OneToMany(mappedBy: 'meal', targetEntity: MealUser::class)]
+    #[ORM\OneToMany(mappedBy: 'meal', targetEntity: MealUser::class, cascade: ['remove'])]
     private Collection $mealUsers;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
