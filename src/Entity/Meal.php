@@ -2,13 +2,19 @@
 
 namespace App\Entity;
 
-use App\Repository\MealRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use DateTime;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\MealRepository;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\HttpFoundation\File\File;
+use Doctrine\Common\Collections\ArrayCollection;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MealRepository::class)]
+#[Vich\Uploadable]
 class Meal
 {
     public const MEAL_TYPE = ['Petit-déjeuner', 'Déjeuner', 'En-cas', 'Diner'];
@@ -49,10 +55,23 @@ class Meal
     private Collection $mealUsers;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date = null;
+    private ?DateTimeInterface $date = null;
 
     #[ORM\Column(nullable: true)]
     private ?bool $isFavourite = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $poster = null;
+
+    #[Vich\UploadableField(mapping: 'poster_file', fileNameProperty: 'poster')]
+    #[Assert\File(
+        maxSize: '5M',
+        mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+    )]
+    private ?File $posterFile = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?DatetimeInterface $updatedAt = null;
 
     public function __construct()
     {
@@ -224,5 +243,34 @@ class Meal
         $this->isFavourite = $isFavourite;
 
         return $this;
+    }
+
+    public function getPoster(): ?string
+    {
+        return $this->poster;
+    }
+
+    public function setPoster(?string $poster): self
+    {
+        $this->poster = $poster;
+
+        return $this;
+    }
+
+    public function setPosterFile(File $image = null): self
+    {
+        $this->posterFile = $image;
+
+        if ($image) {
+            $this->updatedAt = new DateTime('now');
+        }
+
+        return $this;
+    }
+
+
+    public function getPosterFile(): ?File
+    {
+        return $this->posterFile;
     }
 }
