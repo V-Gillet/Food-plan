@@ -29,15 +29,14 @@ class DiaryController extends AbstractController
     ): Response {
         /** @var \App\Entity\User */
         $user = $this->getUser();
+
         $form = $this->createForm(MealSearchType::class);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
         }
         $mealsUser = $mealUserRepo->mealSearch($data['input'] ?? '', $user);
-
-        $form->handleRequest($request);
-
 
         return $this->render(
             'diary/index.html.twig',
@@ -51,7 +50,8 @@ class DiaryController extends AbstractController
     #[Route('/voir/{meal}', name: 'app_meal_show')]
     public function show(
         Meal $meal,
-        ChartJS $chartJS
+        ChartJS $chartJS,
+        MealCalculator $mealCalculator
     ): Response {
         /** @var \App\Entity\User */
         $user = $this->getUser();
@@ -63,6 +63,7 @@ class DiaryController extends AbstractController
                 'lipidChart' => $chartJS->lipidMealChart($meal),
                 'proteinChart' => $chartJS->proteinMealChart($meal),
                 'carbChart' => $chartJS->carbMealChart($meal),
+                'mealCalories' => $mealCalculator->getMealCalories($meal)
 
             ]
         );
@@ -130,7 +131,7 @@ class DiaryController extends AbstractController
             }
             $mealUserRepo->save($mealUser, true);
 
-            return $this->redirectToRoute('app_diary', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_meal_show', ['meal' => $meal->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('diary/edit.html.twig', [
