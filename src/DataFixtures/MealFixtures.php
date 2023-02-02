@@ -33,13 +33,11 @@ class MealFixtures extends Fixture
             $meal->setCalories($this->mealCalculator->getMealCalories($meal));
             $meal->setType(Meal::MEAL_TYPE[$faker->numberBetween(0, 3)]);
             $meal->setIsRecipe(false);
-            $meal->setDate($faker->dateTimeBetween('-1 week', '+1 week'));
             $this->addReference('meal_' . $i, $meal);
 
             $manager->persist($meal);
         }
 
-        $today = new DateTime('today');
         // for User demo
         for ($j = 0; $j < self::USER_MEAL_LOOP; $j++) {
             $meal = new Meal();
@@ -52,7 +50,6 @@ class MealFixtures extends Fixture
             $meal->setCalories($this->mealCalculator->getMealCalories($meal));
             $meal->setType(Meal::MEAL_TYPE[$j]);
             $meal->setIsRecipe(false);
-            $meal->setDate($today);
             $this->addReference('meal_user_0' . $j, $meal);
 
             $manager->persist($meal);

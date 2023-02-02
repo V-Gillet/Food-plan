@@ -48,9 +48,6 @@ class Meal
     #[ORM\OneToMany(mappedBy: 'meal', targetEntity: MealUser::class)]
     private Collection $mealUsers;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date = null;
-
     public function __construct()
     {
         $this->mealUsers = new ArrayCollection();
@@ -195,18 +192,6 @@ class Meal
                 $mealUser->setMeal(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(?\DateTimeInterface $date): self
-    {
-        $this->date = $date;
 
         return $this;
     }

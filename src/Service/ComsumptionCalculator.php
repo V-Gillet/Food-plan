@@ -17,13 +17,13 @@ class ComsumptionCalculator
     {
         /** @var \App\Entity\User */
         $user = $this->security->getUser();
-        dd($mealsUser = $this->mealUserRepository->findBy(['user' => $user]));
-
         $today = new DateTime('today');
-        $meals = $this->mealRepository->findBy(['date' => $today]);
+
+        $mealsUsers = $this->mealUserRepository->findBy(['user' => $user, 'date' => $today]);
+
         $totalCalory = 0;
-        foreach ($meals as $meal) {
-            $totalCalory += $meal->getCalories();
+        foreach ($mealsUsers as $mealUser) {
+            $totalCalory += $mealUser->getMeal()->getCalories();
         }
 
         return $totalCalory;

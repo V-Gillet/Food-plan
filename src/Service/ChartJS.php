@@ -84,8 +84,8 @@ class ChartJS
                 [
                     'label' => 'My First dataset',
                     'backgroundColor' => [
+                        '#EBEBEB',
                         '#45DB2E',
-                        '#EBEBEB'
                     ],
                     'data' => [$user->getNeed()->getGainCalory(), ($user->getNeed()->getGainCalory() - $this->consumptionCalc->totalCaloryConsummed())],
                 ],
@@ -104,8 +104,8 @@ class ChartJS
                 [
                     'label' => 'My First dataset',
                     'backgroundColor' => [
+                        '#EBEBEB',
                         '#45DB2E',
-                        '#EBEBEB'
                     ],
                     'data' => [$user->getNeed()->getGainCalory(), ($user->getNeed()->getGainCalory() - $this->consumptionCalc->totalCaloryConsummed())],
                 ],
@@ -124,8 +124,8 @@ class ChartJS
                 [
                     'label' => 'My First dataset',
                     'backgroundColor' => [
+                        '#EBEBEB',
                         '#45DB2E',
-                        '#EBEBEB'
                     ],
                     'data' => [$user->getNeed()->getGainCalory(), ($user->getNeed()->getGainCalory() - $this->consumptionCalc->totalCaloryConsummed())],
                 ],

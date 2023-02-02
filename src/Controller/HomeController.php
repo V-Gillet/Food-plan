@@ -64,7 +64,9 @@ class HomeController extends AbstractController
 
             return $this->redirectToRoute('app_home');
         }
+        $caloryLeft = 0;
         if ($user->getNeed() !== null) {
+            $caloryLeft = $consumptionCalc->getCaloryLeft();
             if ($user->getGoal() === 'gain') {
                 $caloriesChart = $chartJS->gainCaloriesUserChart($user);
             } elseif ($user->getGoal() === 'lean') {
@@ -82,16 +84,13 @@ class HomeController extends AbstractController
             $caloriesChart = '';
         }
 
-
-
-
         return $this->render('home/index.html.twig', [
             'form' => $form,
             'proteinChart' => $proteinChart,
             'lipidChart' => $lipidChart,
             'carbChart' => $carbChart,
             'caloriesChart' => $caloriesChart,
-            'caloryLeft' => $consumptionCalc->getCaloryLeft()
+            'caloryLeft' => $caloryLeft
         ]);
     }
 }

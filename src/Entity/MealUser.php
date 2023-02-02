@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\MealUserRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MealUserRepository::class)]
@@ -21,6 +22,9 @@ class MealUser
 
     #[ORM\Column(nullable: true)]
     private ?bool $isFavourite = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $date = null;
 
     public function getId(): ?int
     {
@@ -59,6 +63,18 @@ class MealUser
     public function setIsFavourite(?bool $isFavourite): self
     {
         $this->isFavourite = $isFavourite;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTimeInterface $date): self
+    {
+        $this->date = $date;
 
         return $this;
     }

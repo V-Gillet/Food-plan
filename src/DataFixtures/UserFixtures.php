@@ -28,9 +28,6 @@ class UserFixtures extends Fixture
         $user->setPassword($hashedPassword);
         $user->setFirstname('Darth');
         $user->setLastname('Vador');
-        $user->setHeight(188);
-        $user->setGoal('gain');
-        $user->setSexe('male');
         $this->addReference('user_0', $user);
         $manager->persist($user);
 
