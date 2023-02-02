@@ -35,8 +35,10 @@ class DiaryController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
+            //dd($data);
         }
-        $mealsUser = $mealUserRepo->mealSearch($data['input'] ?? '', $user);
+
+        $mealsUser = $mealUserRepo->mealSearch($data['name'] ?? '', $user, $data['type'] ?? '', $data['favourite'] ?? '', $data['origin'] ?? '');
 
         return $this->render(
             'diary/index.html.twig',
