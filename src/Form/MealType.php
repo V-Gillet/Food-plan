@@ -4,8 +4,8 @@ namespace App\Form;
 
 use App\Entity\Meal;
 use Symfony\Component\Form\AbstractType;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,6 +20,8 @@ class MealType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->remove('calories')
+            ->remove('poster')
             ->add(
                 'name',
                 TextType::class,
@@ -98,7 +100,6 @@ class MealType extends AbstractType
                     ],
                 ]
             )
-            ->remove('calories')
             ->add(
                 'type',
                 ChoiceType::class,
@@ -149,6 +150,12 @@ class MealType extends AbstractType
                     'required' => false,
                 ]
             )
+            ->add('posterFile', VichFileType::class, [
+
+                'required'      => false,
+                'allow_delete'  => true, // not mandatory, default is true
+                'download_uri' => true, // not mandatory, default is true
+            ])
             ->add(
                 'date',
                 DateType::class,

@@ -2,7 +2,7 @@
 	<a class="card mb-3 text-decoration-none" href="{{ path("app_meal_show", {'meal': mealUser.meal.id}) }}">
 		<div class="row g-0">
 			<div class="col-md-4">
-				<img src="{{ asset('build/images/placeholder.jpg') }}" class="img-fluid rounded-start card-img" alt="...">
+				<img src="{% if mealUser.meal.poster %}{{ vich_uploader_asset(mealUser.meal) }} {% else %} {{ asset('build/images/placeholder.jpg') }}{% endif %} " class="img-fluid rounded-start card-img" alt="...">
 			</div>
 			<div class="col-md-8">
 				<div class="card-body">
