@@ -8,8 +8,10 @@ use App\Service\ChartJS;
 use App\Entity\WeightHistory;
 use App\Service\NeedsCalculator;
 use App\Form\UserInformationsType;
+use App\Form\WeightHistoryType;
 use App\Repository\NeedRepository;
 use App\Repository\UserRepository;
+use App\Repository\WeightHistoryRepository;
 use App\Service\ComsumptionCalculator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,17 +29,18 @@ class HomeController extends AbstractController
         NeedsCalculator $needsCalculator,
         NeedRepository $needRepository,
         ChartJS $chartJS,
-        ComsumptionCalculator $consumptionCalc
+        ComsumptionCalculator $consumptionCalc,
+        WeightHistoryRepository $weightHistoRepo
     ): Response {
         /** @var \App\Entity\User */
         $user = $this->getUser();
+        $today = new DateTime('today');
 
+        // First need determination form
         $form = $this->createForm(UserInformationsType::class, $user);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $weight = new WeightHistory;
-            $today = new DateTime('today');
 
             /** @var float */
             $tempWeight = $form->getData()->getTempWeight();
@@ -64,6 +67,25 @@ class HomeController extends AbstractController
 
             return $this->redirectToRoute('app_home');
         }
+
+        // Daily weight form
+        $dailyWeightForm = $this->createForm(WeightHistoryType::class);
+        $dailyWeightForm->handleRequest($request);
+        if ($dailyWeightForm->isSubmitted() && $dailyWeightForm->isValid()) {
+            $existingWeightHisto = $weightHistoRepo->findOneBy(['user' => $user, 'date' => $today]);
+            if ($existingWeightHisto) {
+                $existingWeightHisto->setWeight($dailyWeightForm->getData('weight')->getWeight());
+                $weightHistoRepo->save($existingWeightHisto, true);
+            } else {
+                $weightHistory = new WeightHistory();
+                $weightHistory->setWeight($dailyWeightForm->getData('weight')->getWeight());
+                $weightHistory->setDate($today);
+                $weightHistory->setUser($user);
+
+                $weightHistoRepo->save($weightHistory, true);
+            }
+        }
+
         $caloryLeft = 0;
         if ($user->getNeed() !== null) {
             $caloryLeft = $consumptionCalc->getCaloryLeft();
@@ -86,11 +108,13 @@ class HomeController extends AbstractController
 
         return $this->render('home/index.html.twig', [
             'form' => $form,
+            'dailyWeightForm' => $dailyWeightForm,
             'proteinChart' => $proteinChart,
             'lipidChart' => $lipidChart,
             'carbChart' => $carbChart,
             'caloriesChart' => $caloriesChart,
-            'caloryLeft' => $caloryLeft
+            'caloryLeft' => $caloryLeft,
+            'weightEvolutionChart' => $chartJS->weightEvolution($user)
         ]);
     }
 }

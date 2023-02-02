@@ -2,17 +2,25 @@
 
 namespace App\Service;
 
+use App\DataFixtures\WeightHistoryFixtures;
+use DateTime;
+use DateInterval;
 use App\Entity\Meal;
 use App\Entity\User;
+use App\Entity\WeightHistory;
 use Symfony\UX\Chartjs\Model\Chart;
 use App\Service\ComsumptionCalculator;
+use App\Repository\WeightHistoryRepository;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 
 class ChartJS
 {
 
-    public function __construct(private ChartBuilderInterface $chartBuilder, private ComsumptionCalculator $consumptionCalc)
-    {
+    public function __construct(
+        private ChartBuilderInterface $chartBuilder,
+        private ComsumptionCalculator $consumptionCalc,
+        private WeightHistoryRepository $weightHistoRepo
+    ) {
     }
 
     public function proteinUserChart(User $user): Chart
@@ -188,6 +196,53 @@ class ChartJS
                         '#EBEBEB'
                     ],
                     'data' => [$meal->getCarb(), ($meal->getProtein() + $meal->getLipid() + $meal->getCarb())],
+                ],
+            ],
+        ]);
+
+        return $chart;
+    }
+
+    public function weightEvolution(User $user): Chart
+    {
+        $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
+
+        for ($i = 6; $i >= 0; $i--) {
+            $dateinterval = new DateInterval('P' . $i . 'D');
+            $today = new DateTime('today');
+
+            /** @var DateTime */
+            $weightDate = $today->sub($dateinterval);
+
+            $weightsHistos[] = $this->weightHistoRepo->findBy(['user' => $user, 'date' => $weightDate]);
+        }
+        // dd($weightsHistos[0][0]->getWeight());
+        $chart->setData([
+            'datasets' => [
+                [
+                    'label' => 'Évolution de votre poids sur 7 jours glissants',
+                    'backgroundColor' => [
+                        '#45DB2E',
+                    ],
+                    'data' => [
+                        $weightsHistos[0][0]->getWeight(),
+                        $weightsHistos[1][0]->getWeight(),
+                        $weightsHistos[2][0]->getWeight(),
+                        $weightsHistos[3][0]->getWeight(),
+                        $weightsHistos[4][0]->getWeight(),
+                        $weightsHistos[5][0]->getWeight(),
+                        $weightsHistos[6][0]->getWeight()
+                    ],
+                ],
+            ],
+            'labels' => ['1er jour', '2ème jour', '3ème jour', '4ème jour', 'Avant-Hier', 'Hier', 'Aujourd\'hui'],
+        ]);
+
+        $chart->setOptions([
+            'scales' => [
+                'y' => [
+                    'suggestedMin' => 50,
+                    'suggestedMax' => 100,
                 ],
             ],
         ]);
