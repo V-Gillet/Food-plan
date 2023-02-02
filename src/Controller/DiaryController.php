@@ -6,6 +6,7 @@ use App\Entity\Meal;
 use App\Form\MealType;
 use App\Service\ChartJS;
 use App\Repository\MealRepository;
+use App\Repository\MealUserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,17 +21,15 @@ class DiaryController extends AbstractController
 
     #[Route('', name: 'app_diary')]
     public function index(
-        MealRepository $mealRepository,
+        MealUserRepository $mealUserRepo,
     ): Response {
         /** @var \App\Entity\User */
         $user = $this->getUser();
-        $meals = $mealRepository->findBy([], ['date' => 'DESC'], self::MEAL_LIMIT);
 
         return $this->render(
             'diary/index.html.twig',
             [
-                'meals' => $meals,
-
+                'mealsUser' => $mealUserRepo->findBy(['user' => $user], ['date' => 'DESC'], self::MEAL_LIMIT)
             ]
         );
     }

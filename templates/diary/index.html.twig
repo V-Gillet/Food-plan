@@ -24,7 +24,7 @@
 			<div>Searchbar</div>
 		</div>
 		<a href="{{ path("app_meal_new") }}" class="btn btn-primary text-white rounded-4">Ajouter un repas</a>
-		{% for meal in meals %}
+		{% for mealUser in mealsUser %}
 			{% include 'components/_mealCards.html.twig' %}
 		{% endfor %}
 

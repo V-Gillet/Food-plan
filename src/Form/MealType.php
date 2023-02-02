@@ -25,8 +25,7 @@ class MealType extends AbstractType
                 ChoiceType::class,
                 []
             )
-            ->add('isRecipe')
-            ->add('date');
+            ->add('isRecipe');
     }
 
     public function configureOptions(OptionsResolver $resolver): void
