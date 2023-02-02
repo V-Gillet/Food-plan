@@ -10,6 +10,7 @@ use App\Service\NeedsCalculator;
 use App\Form\UserInformationsType;
 use App\Repository\NeedRepository;
 use App\Repository\UserRepository;
+use App\Service\ComsumptionCalculator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,7 +26,8 @@ class HomeController extends AbstractController
         UserRepository $userRepository,
         NeedsCalculator $needsCalculator,
         NeedRepository $needRepository,
-        ChartJS $chartJS
+        ChartJS $chartJS,
+        ComsumptionCalculator $consumptionCalc
     ): Response {
         /** @var \App\Entity\User */
         $user = $this->getUser();
@@ -57,7 +59,7 @@ class HomeController extends AbstractController
             }
             $need->setLipid($needsCalculator->getLipidRepartition($user));
             $need->setProtein($needsCalculator->getProteinRepartition($user));
-            $need->setCarb($needsCalculator->getCarbsRepartiton($user));
+            $need->setCarb($needsCalculator->getCarbsRepartition($user));
             $needRepository->save($need, true);
 
             return $this->redirectToRoute('app_home');
@@ -81,12 +83,15 @@ class HomeController extends AbstractController
         }
 
 
+
+
         return $this->render('home/index.html.twig', [
             'form' => $form,
             'proteinChart' => $proteinChart,
             'lipidChart' => $lipidChart,
             'carbChart' => $carbChart,
-            'caloriesChart' => $caloriesChart
+            'caloriesChart' => $caloriesChart,
+            'caloryLeft' => $consumptionCalc->getCaloryLeft()
         ]);
     }
 }

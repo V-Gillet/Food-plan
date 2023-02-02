@@ -68,7 +68,7 @@ class NeedsCalculator
         return $this->getProteinRepartition($user) * 9;
     }
 
-    public function getCarbsRepartiton(User $user): int
+    public function getCarbsRepartition(User $user): int
     {
         return  $this->getGoalCalories($user) - ($this->getProteinCalories($user) + $this->getLipidCalories($user));
     }

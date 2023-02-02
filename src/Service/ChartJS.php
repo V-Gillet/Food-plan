@@ -5,12 +5,13 @@ namespace App\Service;
 use App\Entity\Meal;
 use App\Entity\User;
 use Symfony\UX\Chartjs\Model\Chart;
+use App\Service\ComsumptionCalculator;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 
 class ChartJS
 {
 
-    public function __construct(private ChartBuilderInterface $chartBuilder)
+    public function __construct(private ChartBuilderInterface $chartBuilder, private ComsumptionCalculator $consumptionCalc)
     {
     }
 
@@ -86,8 +87,7 @@ class ChartJS
                         '#45DB2E',
                         '#EBEBEB'
                     ],
-                    // put the consummed calories here
-                    'data' => [$user->getNeed()->getGainCalory(), 1],
+                    'data' => [$user->getNeed()->getGainCalory(), ($user->getNeed()->getGainCalory() - $this->consumptionCalc->totalCaloryConsummed())],
                 ],
             ],
         ]);
@@ -107,8 +107,7 @@ class ChartJS
                         '#45DB2E',
                         '#EBEBEB'
                     ],
-                    // put the consummed calories here
-                    'data' => [$user->getNeed()->getLossCalory(), 1],
+                    'data' => [$user->getNeed()->getGainCalory(), ($user->getNeed()->getGainCalory() - $this->consumptionCalc->totalCaloryConsummed())],
                 ],
             ],
         ]);
@@ -128,8 +127,7 @@ class ChartJS
                         '#45DB2E',
                         '#EBEBEB'
                     ],
-                    // put the consummed calories here
-                    'data' => [$user->getNeed()->getMaintenanceCalory(), 1],
+                    'data' => [$user->getNeed()->getGainCalory(), ($user->getNeed()->getGainCalory() - $this->consumptionCalc->totalCaloryConsummed())],
                 ],
             ],
         ]);
