@@ -6,6 +6,7 @@ use App\Entity\Meal;
 use App\Form\MealType;
 use App\Entity\MealUser;
 use App\Service\ChartJS;
+use App\Form\MealSearchType;
 use App\Service\MealCalculator;
 use App\Repository\MealRepository;
 use App\Repository\MealUserRepository;
@@ -19,19 +20,30 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[IsGranted('ROLE_USER')]
 class DiaryController extends AbstractController
 {
-    public const MEAL_LIMIT = 20;
+    public const MEAL_LIMIT = 50;
 
     #[Route('', name: 'app_diary')]
     public function index(
         MealUserRepository $mealUserRepo,
+        Request $request,
     ): Response {
         /** @var \App\Entity\User */
         $user = $this->getUser();
+        $form = $this->createForm(MealSearchType::class);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+        }
+        $mealsUser = $mealUserRepo->mealSearch($data['input'] ?? '', $user);
+
+        $form->handleRequest($request);
+
 
         return $this->render(
             'diary/index.html.twig',
             [
-                'mealsUser' => $mealUserRepo->findBy(['user' => $user], ['date' => 'DESC'], self::MEAL_LIMIT)
+                'mealsUser' => $mealsUser,
+                'form' => $form
             ]
         );
     }
