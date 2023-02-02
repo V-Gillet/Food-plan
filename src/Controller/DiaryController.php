@@ -89,13 +89,34 @@ class DiaryController extends AbstractController
     }
 
     #[Route('/{meal}/modifier', name: 'app_meal_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Meal $meal, MealRepository $mealRepository): Response
-    {
+    public function edit(
+        Request $request,
+        Meal $meal,
+        MealRepository $mealRepository,
+        MealUserRepository $mealUserRepo,
+        MealCalculator $mealCalculator
+    ): Response {
         $form = $this->createForm(MealType::class, $meal);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $meal->setCalories($mealCalculator->getMealCalories($meal));
             $mealRepository->save($meal, true);
+            $mealUser = $mealUserRepo->findOneBy(['meal' => $meal, 'user' => $this->getUser()]);
+
+            if ($mealUser) {
+                $mealUser->setmeal($meal);
+                $mealUser->setUser($this->getUser());
+                $mealUser->setDate($meal->getDate());
+                $mealUser->setIsFavourite($meal->isIsFavourite());
+            } else {
+                $mealUser = new MealUser();
+                $mealUser->setmeal($meal);
+                $mealUser->setUser($this->getUser());
+                $mealUser->setDate($meal->getDate());
+                $mealUser->setIsFavourite($meal->isIsFavourite());
+            }
+            $mealUserRepo->save($mealUser, true);
 
             return $this->redirectToRoute('app_diary', [], Response::HTTP_SEE_OTHER);
         }

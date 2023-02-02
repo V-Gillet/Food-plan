@@ -1,14 +1,39 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Meal
+{% block title %}
+	Modifier
+	{{meal.name}}
 {% endblock %}
 
+{% block header %}
+	<header class="bg-white d-flex align-items-center justify-content-between py-3 px-1 rounded-bottom box-shadow">
+		<div class="d-flex align-items-center">
+			<p class=" font-title text-primary fs-1 m-0 px-1">Food Plan</p>
+			<svg width="40" height="42" viewbox="0 0 133 138" fill="#45DB2E" xmlns="http://www.w3.org/2000/svg">
+				<path d="M65.1239 6.70948C67.6463 12.4422 63.9774 31.7043 63.9774 31.7043C63.9774 31.7043 46.7791 21.6147 44.2567 15.8819C41.7343 10.1491 44.2567 3.49914 49.9894 0.976722C55.7222 -1.54569 62.6015 0.976722 65.1239 6.70948Z" fill="#64892F"/>
+				<path d="M69.4809 32.8505H63.5189C63.5189 22.9901 69.0223 6.25049 91.0361 6.25049V12.2126C71.0861 12.2126 69.4809 31.016 69.4809 32.8505Z" fill="#947151"/>
+				<path d="M66.5 31.7037C49.7603 14.7347 0 14.0468 0 62.6606C0 93.3882 36.231 137.645 52.0535 137.645C59.1621 137.645 61.6845 133.059 66.0414 133.059C70.169 133.059 71.5448 137.416 80.7172 137.416C96.5397 137.645 133 93.6175 133 62.6606C133 14.0468 83.2397 14.7347 66.5 31.7037Z" fill="#46DC2E"/>
+			</svg>
+		</div>
+
+		<h1 class="fs-2 m-0 px-1">
+			{{'Modifier' ~ ' '~ meal.name|u.truncate(15, '...')}}</h1>
+	</header>
+{% endblock %}
 {% block body %}
-	<h1>Edit Meal</h1>
+	<main class="container-fluid">
+		<div class="d-flex justify-content-center align-items-center">
+			<a class="btn btn-tertiary my-4 rounded-5" href="{{ path('app_diary') }}">Retour</a>
+		</div>
+		<div class="bg-white box-shadow rounded-4 mb-4 row g-0">
+			<h1 class="text-center py-3">
+				Modifier
+				{{meal.name}}</h1>
 
-	{{ include('diary/_form.html.twig', {'button_label': 'Update'}) }}
-
-	<a href="{{ path('app_diary') }}">back to list</a>
-
-	{{ include('diary/_delete_form.html.twig') }}
+			{{ include('diary/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+			<div class="d-flex justify-content-center align-items-center mb-4">
+				{{ include('diary/_delete_form.html.twig') }}
+			</div>
+		</div>
+	</main>
 {% endblock %}
