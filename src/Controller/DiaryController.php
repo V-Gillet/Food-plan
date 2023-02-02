@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Meal;
 use App\Form\MealType;
+use App\Entity\MealUser;
 use App\Service\ChartJS;
+use App\Service\MealCalculator;
 use App\Repository\MealRepository;
 use App\Repository\MealUserRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,14 +57,27 @@ class DiaryController extends AbstractController
     }
 
     #[Route('/nouveau', name: 'app_meal_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, MealRepository $mealRepository): Response
-    {
+    public function new(
+        Request $request,
+        MealRepository $mealRepository,
+        MealUserRepository $mealUserRepo,
+        MealCalculator $mealCalculator
+    ): Response {
         $meal = new Meal();
         $form = $this->createForm(MealType::class, $meal);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $meal->setCalories($mealCalculator->getMealCalories($meal));
             $mealRepository->save($meal, true);
+
+            $mealUser = new MealUser();
+            $mealUser->setmeal($meal);
+            $mealUser->setUser($this->getUser());
+            $mealUser->setDate($meal->getDate());
+            $mealUser->setIsFavourite($meal->isIsFavourite());
+
+            $mealUserRepo->save($mealUser, true);
 
             return $this->redirectToRoute('app_diary', [], Response::HTTP_SEE_OTHER);
         }
@@ -91,7 +106,7 @@ class DiaryController extends AbstractController
         ]);
     }
 
-    #[Route('/supprimer/{meal}', name: 'app_meal_delete', methods: ['POST'])]
+    #[Route('/supprimer/{id}', name: 'app_meal_delete', methods: ['POST', 'GET'])]
     public function delete(Request $request, Meal $meal, MealRepository $mealRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $meal->getId(), $request->request->get('_token'))) {
