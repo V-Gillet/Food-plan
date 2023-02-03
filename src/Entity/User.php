@@ -45,48 +45,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Type('string')]
     private ?string $lastname = null;
 
-    #[ORM\Column(nullable: true)]
-    #[Assert\Type('float')]
-    #[Assert\Positive]
-    private ?float $height = null;
-
-    #[ORM\Column(length: 50, nullable: true)]
-    #[Assert\Length(max: 50)]
-    #[Assert\Type('string')]
-    private ?string $goal = null;
-
-    #[ORM\Column(length: 50, nullable: true)]
-    #[Assert\Length(max: 50)]
-    #[Assert\Type('string')]
-    private ?string $sexe = null;
-
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: WeightHistory::class, cascade: ['persist'])]
     private Collection $weight;
-
-    #[ORM\Column(nullable: true)]
-    #[Assert\Type('float')]
-    #[Assert\Positive]
-    private ?float $tempWeight = null;
 
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Need $need = null;
 
-    #[ORM\Column(nullable: true)]
-    #[Assert\Type('float')]
-    private ?float $activityRate = null;
-
-    #[ORM\Column(nullable: true)]
-    #[Assert\Type('integer')]
-    #[Assert\Positive]
-    private ?int $fatRate = null;
-
-    #[ORM\Column(nullable: true)]
-    #[Assert\Type('integer')]
-    #[Assert\Positive]
-    private ?int $age = null;
-
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: MealUser::class)]
     private Collection $mealUsers;
+
+    #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Characteristic $characteristics = null;
 
     public function __construct()
     {
@@ -188,42 +157,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getHeight(): ?float
-    {
-        return $this->height;
-    }
-
-    public function setHeight(?float $height): self
-    {
-        $this->height = $height;
-
-        return $this;
-    }
-
-    public function getGoal(): ?string
-    {
-        return $this->goal;
-    }
-
-    public function setGoal(?string $goal): self
-    {
-        $this->goal = $goal;
-
-        return $this;
-    }
-
-    public function getSexe(): ?string
-    {
-        return $this->sexe;
-    }
-
-    public function setSexe(?string $sexe): self
-    {
-        $this->sexe = $sexe;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, WeightHistory>
      */
@@ -254,18 +187,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getTempWeight(): ?float
-    {
-        return $this->tempWeight;
-    }
-
-    public function setTempWeight(?float $tempWeight): self
-    {
-        $this->tempWeight = $tempWeight;
-
-        return $this;
-    }
-
     public function getNeed(): ?Need
     {
         return $this->need;
@@ -284,42 +205,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->need = $need;
-
-        return $this;
-    }
-
-    public function getActivityRate(): ?float
-    {
-        return $this->activityRate;
-    }
-
-    public function setActivityRate(?float $activityRate): self
-    {
-        $this->activityRate = $activityRate;
-
-        return $this;
-    }
-
-    public function getFatRate(): ?int
-    {
-        return $this->fatRate;
-    }
-
-    public function setFatRate(?int $fatRate): self
-    {
-        $this->fatRate = $fatRate;
-
-        return $this;
-    }
-
-    public function getAge(): ?int
-    {
-        return $this->age;
-    }
-
-    public function setAge(?int $age): self
-    {
-        $this->age = $age;
 
         return $this;
     }
@@ -350,6 +235,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $mealUser->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCharacteristics(): ?Characteristic
+    {
+        return $this->characteristics;
+    }
+
+    public function setCharacteristics(?Characteristic $characteristics): self
+    {
+        $this->characteristics = $characteristics;
 
         return $this;
     }

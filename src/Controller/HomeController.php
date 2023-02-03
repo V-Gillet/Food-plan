@@ -2,14 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\Characteristic;
 use DateTime;
 use DateInterval;
 use App\Entity\Need;
 use App\Service\ChartJS;
 use App\Entity\WeightHistory;
 use App\Form\WeightHistoryType;
+use App\Form\CharacteristicType;
+use App\Repository\CharacteristicRepository;
 use App\Service\NeedsCalculator;
-use App\Form\UserInformationsType;
 use App\Repository\NeedRepository;
 use App\Repository\UserRepository;
 use App\Service\ComsumptionCalculator;
@@ -31,14 +33,16 @@ class HomeController extends AbstractController
         NeedRepository $needRepository,
         ChartJS $chartJS,
         ComsumptionCalculator $consumptionCalc,
-        WeightHistoryRepository $weightHistoRepo
+        WeightHistoryRepository $weightHistoRepo,
+        CharacteristicRepository $characteristicRepo
     ): Response {
         /** @var \App\Entity\User */
         $user = $this->getUser();
         $today = new DateTime('today');
+        $characteristic = new Characteristic();
 
         // First need determination form
-        $form = $this->createForm(UserInformationsType::class, $user);
+        $form = $this->createForm(CharacteristicType::class, $characteristic);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             // TODO : manage epty historyWeight without setting false datas
@@ -56,7 +60,9 @@ class HomeController extends AbstractController
                 $weight->setDate($weightDate);
 
                 $user->addWeight($weight);
+                $user->setCharacteristics($characteristic);
                 $userRepository->save($user, true);
+                $characteristicRepo->save($characteristic, true);
             }
             $need = new Need;
             $need->setUser($user);
@@ -95,9 +101,9 @@ class HomeController extends AbstractController
         $caloryLeft = 0;
         if ($user->getNeed() !== null) {
             $caloryLeft = $consumptionCalc->getCaloryLeft();
-            if ($user->getGoal() === 'gain') {
+            if ($user->getCharacteristics()->getGoal() === 'gain') {
                 $caloriesChart = $chartJS->gainCaloriesUserChart($user);
-            } elseif ($user->getGoal() === 'lean') {
+            } elseif ($user->getCharacteristics()->getGoal() === 'lean') {
                 $caloriesChart = $chartJS->leanCaloriesUserChart($user);
             } else {
                 $caloriesChart = $chartJS->maintenanceCaloriesUserChart($user);

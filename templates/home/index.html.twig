@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	{% if app.user.height %}
+	{% if app.user.characteristics%}
 		Tableau de bord
 	{% else %}
 		Vos informations
@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block header %}
-	{% if app.user.height %}
+	{% if app.user.characteristics%}
 		<header class="bg-white d-flex align-items-center justify-content-between py-3 px-1 rounded-bottom box-shadow">
 			<div class="d-flex align-items-center">
 				<p class=" font-title text-primary fs-1 m-0 px-1">Food Plan</p>
@@ -40,14 +40,14 @@
 {% endblock %}
 {% block body %}
 	<main class="container-fluid">
-		{% if app.user.height %}
+		{% if app.user.characteristics %}
 			<section class="bg-white box-shadow rounded-4 my-4">
 				<div class="d-flex justify-content-center py-3">
 					<h2 class="font-title px-2 mb-0">Mon objectif journalier</h2>
 					<div class="d-flex align-items-center badge bg-white border border-2 border-primary rounded-pill text-primary text-center">
-						{% if app.user.goal == 'lean' %}
+						{% if app.user.characteristics.goal == 'lean' %}
 							Perte de poids
-						{% elseif  app.user.goal == 'gain' %}
+						{% elseif  app.user.characteristics.goal == 'gain' %}
 							Prise de masse
 						{% else %}
 							Maintenance
@@ -83,7 +83,7 @@
 			<section class="bg-white box-shadow rounded-4 my-4 ">
 				<div class="d-flex justify-content-center mt-4 mb-2 position-relative">
 					{{ render_chart(caloriesChart, {'class': 'calories-chart'}) }}
-					<p class="text-center position-absolute top-50 start-50 translate-middle">
+					<p class="text-center position-absolute top-50 start-50 translate-middle {% if caloryLeft < 0 %} text-quatro {% endif %} ">
 						{{caloryLeft}}
 						<br>
 						Calories restantes
