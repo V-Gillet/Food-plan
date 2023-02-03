@@ -151,7 +151,10 @@ class MealType extends AbstractType
                 ]
             )
             ->add('posterFile', VichFileType::class, [
-
+                'label' => 'Photo du repas',
+                'label_attr' => [
+                    'class' => ' fs-5 mt-3 font-title'
+                ],
                 'required'      => false,
                 'allow_delete'  => true, // not mandatory, default is true
                 'download_uri' => true, // not mandatory, default is true
@@ -160,6 +163,9 @@ class MealType extends AbstractType
                 'date',
                 DateType::class,
                 [
+                    'label_attr' => [
+                        'class' => ' fs-5 mt-3'
+                    ],
                     'widget' => 'single_text',
                 ]
             );

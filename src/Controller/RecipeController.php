@@ -16,13 +16,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/meal')]
+#[Route('/recipe')]
 #[IsGranted('ROLE_USER')]
-class DiaryController extends AbstractController
+class RecipeController extends AbstractController
 {
     public const MEAL_LIMIT = 50;
 
-    #[Route('', name: 'app_diary')]
+    #[Route('', name: 'app_recipe')]
     public function index(
         MealUserRepository $mealUserRepo,
         Request $request,
@@ -37,10 +37,10 @@ class DiaryController extends AbstractController
             $data = $form->getData();
         }
 
-        $mealsUser = $mealUserRepo->mealSearch($data['name'] ?? '', $user, $data['type'] ?? '', $data['favourite'] ?? '', $data['origin'] ?? '');
+        $mealsUser = $mealUserRepo->recipeSearch($data['name'] ?? '', $user, $data['type'] ?? '', $data['favourite'] ?? '', $data['origin'] ?? '');
 
         return $this->render(
-            'diary/index.html.twig',
+            'recipe/index.html.twig',
             [
                 'mealsUser' => $mealsUser,
                 'form' => $form
@@ -48,7 +48,7 @@ class DiaryController extends AbstractController
         );
     }
 
-    #[Route('/voir/{meal}', name: 'app_meal_show')]
+    #[Route('/voir/{meal}', name: 'app_recipe_show')]
     public function show(
         Meal $meal,
         ChartJS $chartJS,
@@ -58,19 +58,18 @@ class DiaryController extends AbstractController
         $user = $this->getUser();
 
         return $this->render(
-            'diary/show.html.twig',
+            'recipe/show.html.twig',
             [
                 'meal' => $meal,
                 'lipidChart' => $chartJS->lipidMealChart($meal),
                 'proteinChart' => $chartJS->proteinMealChart($meal),
                 'carbChart' => $chartJS->carbMealChart($meal),
                 'mealCalories' => $mealCalculator->getMealCalories($meal)
-
             ]
         );
     }
 
-    #[Route('/nouveau', name: 'app_meal_new', methods: ['GET', 'POST'])]
+    #[Route('/nouveau', name: 'app_recipe_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
         MealRepository $mealRepository,
@@ -93,16 +92,16 @@ class DiaryController extends AbstractController
 
             $mealUserRepo->save($mealUser, true);
 
-            return $this->redirectToRoute('app_diary', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_recipe', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('diary/new.html.twig', [
+        return $this->render('recipe/new.html.twig', [
             'meal' => $meal,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{meal}/modifier', name: 'app_meal_edit', methods: ['GET', 'POST'])]
+    #[Route('/{meal}/modifier', name: 'app_recipe_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
         Meal $meal,
@@ -132,22 +131,22 @@ class DiaryController extends AbstractController
             }
             $mealUserRepo->save($mealUser, true);
 
-            return $this->redirectToRoute('app_meal_show', ['meal' => $meal->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_recipe_show', ['meal' => $meal->getId()], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('diary/edit.html.twig', [
+        return $this->render('recipe/edit.html.twig', [
             'meal' => $meal,
             'form' => $form,
         ]);
     }
 
-    #[Route('/supprimer/{meal}', name: 'app_meal_delete', methods: ['POST'])]
+    #[Route('/supprimer/{meal}', name: 'app_recipe_delete', methods: ['POST'])]
     public function delete(Request $request, Meal $meal, MealRepository $mealRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $meal->getId(), $request->request->get('_token'))) {
             $mealRepository->remove($meal, true);
         }
 
-        return $this->redirectToRoute('app_diary', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_recipe', [], Response::HTTP_SEE_OTHER);
     }
 }

@@ -85,13 +85,12 @@ class ChartJS
     {
         $chart = $this->chartBuilder->createChart(Chart::TYPE_DOUGHNUT);
 
-
         if ($this->consumptionCalc->getCaloryLeft() < 0) {
+            $caloryLeft = 0;
             $bgColor = '#CA332F';
-            $caloryGoal = 0;
         } else {
             $bgColor = '#EBEBEB';
-            $caloryGoal = $user->getNeed()->getGainCalory();
+            $caloryLeft = $this->consumptionCalc->getCaloryLeft();
         }
 
         $chart->setData([
@@ -103,7 +102,7 @@ class ChartJS
                         '#45DB2E',
 
                     ],
-                    'data' => [$this->consumptionCalc->totalCaloryConsummed(), $caloryGoal],
+                    'data' => [$this->consumptionCalc->totalCaloryConsummed(), $caloryLeft],
                 ],
             ],
         ]);
@@ -115,13 +114,12 @@ class ChartJS
     {
         $chart = $this->chartBuilder->createChart(Chart::TYPE_DOUGHNUT);
 
-
         if ($this->consumptionCalc->getCaloryLeft() < 0) {
             $bgColor = '#CA332F';
-            $caloryGoal = 0;
+            $caloryLeft = 0;
         } else {
             $bgColor = '#EBEBEB';
-            $caloryGoal = $user->getNeed()->getLossCalory();
+            $caloryLeft = $this->consumptionCalc->getCaloryLeft();
         }
 
         $chart->setData([
@@ -132,7 +130,7 @@ class ChartJS
                         $bgColor,
                         '#45DB2E',
                     ],
-                    'data' => [$this->consumptionCalc->totalCaloryConsummed(), $caloryGoal],
+                    'data' => [$this->consumptionCalc->totalCaloryConsummed(), $caloryLeft],
                 ],
             ],
         ]);
@@ -144,13 +142,12 @@ class ChartJS
     {
         $chart = $this->chartBuilder->createChart(Chart::TYPE_DOUGHNUT);
 
-
         if ($this->consumptionCalc->getCaloryLeft() < 0) {
+            $caloryLeft = 0;
             $bgColor = '#CA332F';
-            $caloryGoal = 0;
         } else {
             $bgColor = '#EBEBEB';
-            $caloryGoal = $user->getNeed()->getMaintenanceCalory();
+            $caloryLeft = $this->consumptionCalc->getCaloryLeft();
         }
 
         $chart->setData([
@@ -161,7 +158,7 @@ class ChartJS
                         $bgColor,
                         '#45DB2E',
                     ],
-                    'data' => [$this->consumptionCalc->totalCaloryConsummed(), $caloryGoal],
+                    'data' => [$this->consumptionCalc->totalCaloryConsummed(), $caloryLeft],
                 ],
             ],
         ]);

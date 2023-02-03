@@ -80,6 +80,43 @@ class MealUserRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function recipeSearch(?string $searchedValue, User $user, ?string $type, bool $favourite, ?string $origin): array
+    {
+        $queryBuilder = $this->createQueryBuilder('mu');
+        $queryBuilder
+            ->where('mu.user = :user_id')
+            ->setParameter('user_id', $user->getId())
+            ->join('mu.meal', 'm');
+        if ($searchedValue) {
+            $queryBuilder
+                ->andWhere('m.name LIKE :searchedValue')
+                ->setParameter('searchedValue', '%' . $searchedValue . '%');
+        }
+        if ($type) {
+            $queryBuilder
+                ->andWhere('m.type = :type')
+                ->setParameter('type', $type);
+        }
+        if ($favourite === true) {
+            $queryBuilder
+                ->andWhere('m.isFavourite = :favourite')
+                ->setParameter('favourite', $favourite);
+        }
+        if ($origin) {
+            $queryBuilder
+                ->andWhere('m.origin = :origin')
+                ->setParameter('origin', $origin);
+        }
+        $queryBuilder
+            ->andWhere('m.isRecipe = :isRecipe')
+            ->setParameter('isRecipe', true)
+            ->orderBy('mu.date', 'DESC')
+            ->setMaxResults(DiaryController::MEAL_LIMIT);
+
+        return $queryBuilder->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return MealUser[] Returns an array of MealUser objects
     //     */
