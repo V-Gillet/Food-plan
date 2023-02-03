@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nouveau repas
+{% block title %}Nouvelle recette
 {% endblock %}
 
 {% block header %}
@@ -14,7 +14,7 @@
 			</svg>
 		</div>
 
-		<h1 class="fs-2 m-0 px-1">Nouveau repas</h1>
+		<h1 class="fs-2 m-0 px-1">Nouvelle recette</h1>
 	</header>
 {% endblock %}
 {% block body %}
@@ -23,7 +23,7 @@
 			<a class="btn btn-tertiary my-4" href="{{ path('app_recipe') }}">Retour</a>
 		</div>
 		<div class="bg-white box-shadow rounded-4 py-1">
-			<h1 class="text-center mt-3 mb-4">Nouveau Repas</h1>
+			<h1 class="text-center mt-3 mb-4">Nouvelle recette</h1>
 			{{ include('recipe/_form.html.twig') }}
 		</div>
 

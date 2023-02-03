@@ -27,17 +27,15 @@ class MealUserFixtures extends Fixture implements DependentFixtureInterface
             $mealUser = new MealUser();
             $mealUser->setUser($this->getReference('user_0'));
             $mealUser->setMeal($this->getReference('meal_' . $faker->unique->numberBetween(0, MealFixtures::GENERIC_MEAL_LOOP)));
-            $mealUser->setDate($faker->dateTimeBetween('-4 week', 'now'));
+            $mealUser->setDate($faker->dateTimeBetween('-4 week', '-1 day'));
             $manager->persist($mealUser);
         }
 
-        $today = new DateTime('today');
-        for ($j = 0; $j < MealFixtures::USER_MEAL_LOOP; $j++) {
+        for ($j = MealFixtures::GENERIC_MEAL_LOOP; $j < MealFixtures::GENERIC_RECIPE_LOOP; $j++) {
             $mealUser = new MealUser();
-            $mealUser->setUser($this->getReference('user_0'));
-            $mealUser->setMeal($this->getReference('meal_user_0' . $j));
-            $mealUser->setDate($today);
-
+            $mealUser->setUser($this->getReference('user_1'));
+            $mealUser->setMeal($this->getReference('meal_' . $j));
+            $mealUser->setDate($faker->dateTimeBetween('-4 week', '-1 day'));
             $manager->persist($mealUser);
         }
 

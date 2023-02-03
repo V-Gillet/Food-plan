@@ -38,7 +38,6 @@ p{
 
 a{
     font-family: $font-subTitle;
-    font-size: 1.2rem;
 }
 
 .font-title{
@@ -55,7 +54,6 @@ a{
 
 button{
     font-family: $font-subTitle !important;
-    font-size: 1.2rem;
 }
 
 .form-label{
@@ -75,6 +73,10 @@ button{
 .card-img{
     max-height : 500px;  
     object-fit: cover;   
+}
+
+.font-subTitle{
+    font-family: $font-subTitle;
 }
 
 .view-img{

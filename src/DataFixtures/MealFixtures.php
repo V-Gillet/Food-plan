@@ -12,6 +12,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 class MealFixtures extends Fixture
 {
     public const GENERIC_MEAL_LOOP = 50;
+    public const GENERIC_RECIPE_LOOP = 100;
     public const USER_MEAL_LOOP = 3;
 
     public function __construct(private MealCalculator $mealCalculator)
@@ -22,7 +23,7 @@ class MealFixtures extends Fixture
     {
         $faker = Factory::create();
 
-        for ($i = 0; $i <= self::GENERIC_MEAL_LOOP; $i++) {
+        for ($i = 0; $i < self::GENERIC_MEAL_LOOP; $i++) {
             $meal = new Meal();
             $meal->setName($faker->words(3, true));
             $meal->setDescription($faker->sentence($faker->randomNumber(3, true)));
@@ -51,6 +52,23 @@ class MealFixtures extends Fixture
             $meal->setType(Meal::MEAL_TYPE[$j]);
             $meal->setIsRecipe(false);
             $this->addReference('meal_user_0' . $j, $meal);
+
+            $manager->persist($meal);
+        }
+
+        // Is recipe true
+        for ($k = self::GENERIC_MEAL_LOOP; $k <= self::GENERIC_RECIPE_LOOP; $k++) {
+            $meal = new Meal();
+            $meal->setName($faker->words(3, true));
+            $meal->setDescription($faker->sentence($faker->randomNumber(3, true)));
+            $meal->setOrigin($faker->countryCode());
+            $meal->setLipid($faker->numberBetween(2, 40));
+            $meal->setProtein($faker->numberBetween(20, 60));
+            $meal->setCarb($faker->numberBetween(20, 150));
+            $meal->setCalories($this->mealCalculator->getMealCalories($meal));
+            $meal->setType(Meal::MEAL_TYPE[$j]);
+            $meal->setIsRecipe(true);
+            $this->addReference('meal_' . $k, $meal);
 
             $manager->persist($meal);
         }
