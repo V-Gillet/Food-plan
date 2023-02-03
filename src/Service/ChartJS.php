@@ -2,12 +2,10 @@
 
 namespace App\Service;
 
-use App\DataFixtures\WeightHistoryFixtures;
 use DateTime;
 use DateInterval;
 use App\Entity\Meal;
 use App\Entity\User;
-use App\Entity\WeightHistory;
 use Symfony\UX\Chartjs\Model\Chart;
 use App\Service\ComsumptionCalculator;
 use App\Repository\WeightHistoryRepository;
@@ -87,16 +85,25 @@ class ChartJS
     {
         $chart = $this->chartBuilder->createChart(Chart::TYPE_DOUGHNUT);
 
+
+        if ($this->consumptionCalc->getCaloryLeft() < 0) {
+            $bgColor = '#CA332F';
+            $caloryGoal = 0;
+        } else {
+            $bgColor = '#EBEBEB';
+            $caloryGoal = $user->getNeed()->getGainCalory();
+        }
+
         $chart->setData([
             'datasets' => [
                 [
                     'label' => 'My First dataset',
                     'backgroundColor' => [
-                        '#EBEBEB',
+                        $bgColor,
                         '#45DB2E',
 
                     ],
-                    'data' => [$this->consumptionCalc->totalCaloryConsummed(), $user->getNeed()->getGainCalory()],
+                    'data' => [$this->consumptionCalc->totalCaloryConsummed(), $caloryGoal],
                 ],
             ],
         ]);
@@ -108,15 +115,24 @@ class ChartJS
     {
         $chart = $this->chartBuilder->createChart(Chart::TYPE_DOUGHNUT);
 
+
+        if ($this->consumptionCalc->getCaloryLeft() < 0) {
+            $bgColor = '#CA332F';
+            $caloryGoal = 0;
+        } else {
+            $bgColor = '#EBEBEB';
+            $caloryGoal = $user->getNeed()->getLossCalory();
+        }
+
         $chart->setData([
             'datasets' => [
                 [
                     'label' => 'My First dataset',
                     'backgroundColor' => [
-                        '#EBEBEB',
+                        $bgColor,
                         '#45DB2E',
                     ],
-                    'data' => [$this->consumptionCalc->totalCaloryConsummed(), $user->getNeed()->getLossCalory()],
+                    'data' => [$this->consumptionCalc->totalCaloryConsummed(), $caloryGoal],
                 ],
             ],
         ]);
@@ -128,15 +144,24 @@ class ChartJS
     {
         $chart = $this->chartBuilder->createChart(Chart::TYPE_DOUGHNUT);
 
+
+        if ($this->consumptionCalc->getCaloryLeft() < 0) {
+            $bgColor = '#CA332F';
+            $caloryGoal = 0;
+        } else {
+            $bgColor = '#EBEBEB';
+            $caloryGoal = $user->getNeed()->getMaintenanceCalory();
+        }
+
         $chart->setData([
             'datasets' => [
                 [
                     'label' => 'My First dataset',
                     'backgroundColor' => [
-                        '#EBEBEB',
+                        $bgColor,
                         '#45DB2E',
                     ],
-                    'data' => [$this->consumptionCalc->totalCaloryConsummed(), $user->getNeed()->getMaintenanceCalory()],
+                    'data' => [$this->consumptionCalc->totalCaloryConsummed(), $caloryGoal],
                 ],
             ],
         ]);
@@ -218,7 +243,7 @@ class ChartJS
             $weightsHistos[] = $this->weightHistoRepo->findBy(['user' => $user, 'date' => $weightDate]);
         }
 
-        if ($user->getHeight()) {
+        if ($user->getCharacteristics()) {
             $chart->setData([
                 'datasets' => [
                     [

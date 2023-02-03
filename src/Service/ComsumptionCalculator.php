@@ -32,9 +32,9 @@ class ComsumptionCalculator
     {
         /** @var \App\Entity\User */
         $user = $this->security->getUser();
-        if ($user->getGoal() === 'gain') {
+        if ($user->getCharacteristics()->getGoal() === 'gain') {
             $caloryLeft = $user->getNeed()->getGainCalory() - $this->totalCaloryConsummed();
-        } elseif ($user->getGoal() === 'lean') {
+        } elseif ($user->getCharacteristics()->getGoal() === 'lean') {
             $caloryLeft = $user->getNeed()->getLossCalory() - $this->totalCaloryConsummed();
         } else {
             $caloryLeft = $user->getNeed()->getMaintenanceCalory() - $this->totalCaloryConsummed();

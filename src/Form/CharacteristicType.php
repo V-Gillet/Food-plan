@@ -2,24 +2,18 @@
 
 namespace App\Form;
 
-use App\Entity\User;
+use App\Entity\Characteristic;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
-class UserInformationsType extends AbstractType
+class CharacteristicType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->remove('email')
-            ->remove('roles')
-            ->remove('password')
-            ->remove('firstname')
-            ->remove('lastname')
             ->add(
                 'height',
                 NumberType::class,
@@ -120,7 +114,7 @@ class UserInformationsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
+            'data_class' => Characteristic::class,
         ]);
     }
 }
