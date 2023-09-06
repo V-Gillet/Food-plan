@@ -3,81 +3,82 @@
 namespace App\Controller;
 
 use App\Entity\Characteristic;
-use DateTime;
-use DateInterval;
 use App\Entity\Need;
-use App\Service\ChartJS;
+use App\Entity\User;
 use App\Entity\WeightHistory;
-use App\Form\WeightHistoryType;
 use App\Form\CharacteristicType;
+use App\Form\WeightHistoryType;
 use App\Repository\CharacteristicRepository;
-use App\Service\NeedsCalculator;
 use App\Repository\NeedRepository;
 use App\Repository\UserRepository;
-use App\Service\ComsumptionCalculator;
 use App\Repository\WeightHistoryRepository;
+use App\Service\ChartJS;
+use App\Service\ComsumptionCalculator;
+use App\Service\NeedsCalculator;
+use DateTime;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[IsGranted('ROLE_USER')]
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
     public function index(
-        Request $request,
-        UserRepository $userRepository,
-        NeedsCalculator $needsCalculator,
-        NeedRepository $needRepository,
-        ChartJS $chartJS,
-        ComsumptionCalculator $consumptionCalc,
-        WeightHistoryRepository $weightHistoRepo,
+        Request                  $request,
+        UserRepository           $userRepository,
+        NeedsCalculator          $needsCalculator,
+        NeedRepository           $needRepository,
+        ChartJS                  $chartJS,
+        ComsumptionCalculator    $consumptionCalc,
+        WeightHistoryRepository  $weightHistoRepo,
         CharacteristicRepository $characteristicRepo
-    ): Response {
+    ): Response
+    {
         /** @var \App\Entity\User */
         $user = $this->getUser();
         $today = new DateTime('today');
         $characteristic = new Characteristic();
 
-        // First need determination form
-        $form = $this->createForm(CharacteristicType::class, $characteristic);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            // TODO : manage epty historyWeight without setting false datas
-            for ($i = 6; $i >= 0; $i--) {
-                $now = new DateTime('today');
-                $dateinterval = new DateInterval('P' . $i . 'D');
+        if (!$user->getCharacteristics()) {
+            // First need determination form
+            $form = $this->createForm(CharacteristicType::class, $characteristic);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
                 $weight = new WeightHistory;
-                /** @var DateTime */
-                $weightDate = $now->sub($dateinterval);
+
                 /** @var float */
                 $tempWeight = $form->getData()->getTempWeight();
 
                 $weight->setUser($user);
                 $weight->setWeight($tempWeight);
-                $weight->setDate($weightDate);
+                $weight->setDate($today);
 
                 $user->addWeight($weight);
                 $user->setCharacteristics($characteristic);
                 $userRepository->save($user, true);
-                $characteristicRepo->save($characteristic, true);
-            }
-            $need = new Need;
-            $need->setUser($user);
-            $need->setMaintenanceCalory($needsCalculator->getMaintenanceCalories($user));
-            if ($form->getData()->getGoal() === 'gain') {
-                $need->setGainCalory($needsCalculator->getGoalCalories($user));
-            } elseif ($form->getData()->getGoal() === 'lean') {
-                $need->setLossCalory($needsCalculator->getGoalCalories($user));
-            }
-            $need->setLipid($needsCalculator->getLipidRepartition($user));
-            $need->setProtein($needsCalculator->getProteinRepartition($user));
-            $need->setCarb($needsCalculator->getCarbsRepartition($user));
-            $needRepository->save($need, true);
 
-            return $this->redirectToRoute('app_home');
+                $characteristicRepo->save($characteristic, true);
+                $need = new Need;
+                $need->setUser($user);
+                $need->setMaintenanceCalory($needsCalculator->getMaintenanceCalories($user));
+                if ($form->getData()->getGoal() === 'gain') {
+                    $need->setGainCalory($needsCalculator->getGoalCalories($user));
+                } elseif ($form->getData()->getGoal() === 'lean') {
+                    $need->setLossCalory($needsCalculator->getGoalCalories($user));
+                }
+                $need->setLipid($needsCalculator->getLipidRepartition($user));
+                $need->setProtein($needsCalculator->getProteinRepartition($user));
+                $need->setCarb($needsCalculator->getCarbsRepartition($user));
+                $needRepository->save($need, true);
+
+                return $this->redirectToRoute('app_home');
+            }
+            return $this->render('home/index.html.twig', [
+                'form' => $form,
+            ]);
         }
 
         // Daily weight form
@@ -98,28 +99,25 @@ class HomeController extends AbstractController
             }
         }
 
-        $caloryLeft = 0;
-        if ($user->getNeed() !== null) {
-            $caloryLeft = $consumptionCalc->getCaloryLeft();
-            if ($user->getCharacteristics()->getGoal() === 'gain') {
+        // setup the daily follow chart
+        $caloryLeft = $consumptionCalc->getCaloryLeft();
+        switch ($user->getCharacteristics()->getGoal()) {
+            case User::GAIN_OBJECTIVE:
                 $caloriesChart = $chartJS->gainCaloriesUserChart($user);
-            } elseif ($user->getCharacteristics()->getGoal() === 'lean') {
+                break;
+            case User::LEAN_OBJECTIVE:
                 $caloriesChart = $chartJS->leanCaloriesUserChart($user);
-            } else {
+                break;
+            default:
                 $caloriesChart = $chartJS->maintenanceCaloriesUserChart($user);
-            }
-            $proteinChart = $chartJS->proteinUserChart($user);
-            $lipidChart = $chartJS->lipidUserChart($user);
-            $carbChart = $chartJS->carbUserChart($user);
-        } else {
-            $proteinChart = '';
-            $lipidChart = '';
-            $carbChart = '';
-            $caloriesChart = '';
+
+                //Macro charts
+                $proteinChart = $chartJS->proteinUserChart($user);
+                $lipidChart = $chartJS->lipidUserChart($user);
+                $carbChart = $chartJS->carbUserChart($user);
         }
 
         return $this->render('home/index.html.twig', [
-            'form' => $form,
             'dailyWeightForm' => $dailyWeightForm,
             'proteinChart' => $proteinChart,
             'lipidChart' => $lipidChart,

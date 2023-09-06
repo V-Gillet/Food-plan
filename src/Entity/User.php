@@ -13,6 +13,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    final public const GAIN_OBJECTIVE = 'gain';
+    final public const LEAN_OBJECTIVE = 'lean';
+    final public const MAINTAIN_OBJECTIVE = 'maintain';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

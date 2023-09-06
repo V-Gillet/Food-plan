@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Characteristic;
+use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -97,9 +98,9 @@ class CharacteristicType extends AbstractType
             ])
             ->add('goal', ChoiceType::class, [
                 'choices'  => [
-                    'Maitenance' => 'maitenance',
-                    'Prise de masse' => 'gain',
-                    'Sèche' => 'lean',
+                    'Maitenance' => User::MAINTAIN_OBJECTIVE,
+                    'Prise de masse' => User::GAIN_OBJECTIVE,
+                    'Sèche' => USer::LEAN_OBJECTIVE,
                 ],
                 'label' => 'Votre objectif',
                 'label_attr' => [

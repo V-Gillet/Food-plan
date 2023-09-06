@@ -23,7 +23,7 @@ class UserFixtures extends Fixture
         $user->setEmail('pepsi-man@mail.com');
         $hashedPassword = $this->passwordHasher->hashPassword(
             $user,
-            'totototo'
+            'password'
         );
         $user->setPassword($hashedPassword);
         $user->setFirstname('Darth');
