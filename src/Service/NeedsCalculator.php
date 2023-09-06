@@ -8,11 +8,11 @@ use DateTime;
 
 class NeedsCalculator
 {
-    public const MASS_GAIN = 1.1;
-    public const MASS_LOSS = 0.8;
-    public const PROTEIN_RATE = 0.55;
-    public const LIPID_RATE = 0.25;
-    public const CARB_RATE = 0.2;
+    final public const MASS_GAIN = 1.1;
+    final public const MASS_LOSS = 0.8;
+    final public const PROTEIN_RATE = 0.55;
+    final public const LIPID_RATE = 0.25;
+    final public const CARB_RATE = 0.2;
 
     public function __construct(private WeightHistoryRepository $weightRepo)
     {
@@ -25,9 +25,12 @@ class NeedsCalculator
         $weightHistory = $this->weightRepo->findOneBy(['user' => $user, 'date' => $today]);
 
         if ($user->getCharacteristics()->getSexe() === 'male') {
-            $maintenance = (10 * $weightHistory->getWeight() + 6.25 * $user->getCharacteristics()->getHeight() - 5 * $user->getCharacteristics()->getAge() + 5) * $user->getCharacteristics()->getActivityRate();
+            $maintenance =
+                (10 * $weightHistory->getWeight() + 6.25 * $user->getCharacteristics()->getHeight() - 5 * $user->getCharacteristics()->getAge() + 5)
+                * $user->getCharacteristics()->getActivityRate();
         } else {
-            $maintenance = (10 * $weightHistory->getWeight() + 6.25 * $user->getCharacteristics()->getHeight() - 5 * $user->getCharacteristics()->getAge() - 161) * $user->getCharacteristics()->getActivityRate();
+            $maintenance = (10 * $weightHistory->getWeight() + 6.25 * $user->getCharacteristics()->getHeight() - 5 * $user->getCharacteristics()->getAge() - 161)
+                * $user->getCharacteristics()->getActivityRate();
         }
 
         return $maintenance;
@@ -48,31 +51,31 @@ class NeedsCalculator
 
     public function getLipidRepartition(User $user): int
     {
-        return self::LIPID_RATE * $this->getGoalCalories($user) / 9;
+        return self::LIPID_RATE * $this->getGoalCalories($user) / MealCalculator::LIPID_CALORIC_VALUE;
     }
 
     public function getLipidCalories(User $user): int
     {
-        return $this->getLipidRepartition($user) * 9;
+        return $this->getLipidRepartition($user) * MealCalculator::LIPID_CALORIC_VALUE;
     }
 
     public function getProteinRepartition(User $user): int
     {
-        return self::PROTEIN_RATE * $this->getGoalCalories($user) / 4;
+        return self::PROTEIN_RATE * $this->getGoalCalories($user) / MealCalculator::PROTEIN_CALORIC_VALUE;
     }
 
     public function getProteinCalories(User $user): int
     {
-        return $this->getProteinRepartition($user) * 4;
+        return $this->getProteinRepartition($user) * MealCalculator::PROTEIN_CALORIC_VALUE;
     }
 
     public function getCarbsRepartition(User $user): int
     {
-        return self::CARB_RATE * $this->getGoalCalories($user) / 4;
+        return self::CARB_RATE * $this->getGoalCalories($user) / MealCalculator::CARB_CALORIC_VALUE;
     }
 
     public function getCarbsCalories(User $user): int
     {
-        return $this->getCarbsRepartition($user) * 4;
+        return $this->getCarbsRepartition($user) * MealCalculator::CARB_CALORIC_VALUE;
     }
 }

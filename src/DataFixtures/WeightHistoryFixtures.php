@@ -24,24 +24,24 @@ class WeightHistoryFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create();
-
-        for ($i = self::WEIGHT_LOOP; $i > 0; $i--) {
-            $dateinterval = new DateInterval('P' . $i . 'D');
-            $today = new DateTime('today');
-
-            /** @var DateTime */
-            $weightDate = $today->sub($dateinterval);
-
-            $weightHistory = new WeightHistory();
-            $weightHistory->setWeight(SELF::DARTH_VADOR_STARTING_WEIGHT + $faker->randomFloat(2, 0, 1));
-            $weightHistory->setUser($this->getReference('user_0'));
-            $weightHistory->setDate($weightDate);
-
-            $manager->persist($weightHistory);
-        }
-
-        $manager->flush();
+//        $faker = Factory::create();
+//
+//        for ($i = self::WEIGHT_LOOP; $i > 0; $i--) {
+//            $dateinterval = new DateInterval('P' . $i . 'D');
+//            $today = new DateTime('today');
+//
+//            /** @var DateTime */
+//            $weightDate = $today->sub($dateinterval);
+//
+//            $weightHistory = new WeightHistory();
+//            $weightHistory->setWeight(SELF::DARTH_VADOR_STARTING_WEIGHT + $faker->randomFloat(2, 0, 1));
+//            $weightHistory->setUser($this->getReference('user_0'));
+//            $weightHistory->setDate($weightDate);
+//
+//            $manager->persist($weightHistory);
+//        }
+//
+//        $manager->flush();
     }
 
     public function getDependencies()

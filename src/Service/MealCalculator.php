@@ -7,16 +7,15 @@ use App\Service\NeedsCalculator;
 
 class MealCalculator
 {
-
-    public function __construct(private NeedsCalculator $needsCalc)
-    {
-    }
+    final public const PROTEIN_CALORIC_VALUE = 4;
+    final public const CARB_CALORIC_VALUE = 4;
+    final public const LIPID_CALORIC_VALUE = 9;
 
     public function getMealCalories(Meal $meal): int
     {
-        $proteinCalories = $meal->getProtein() * 4;
-        $lipidCalories = $meal->getLipid() * 9;
-        $carbCalories = $meal->getCarb() * 4;
+        $proteinCalories = $meal->getProtein() * self::PROTEIN_CALORIC_VALUE;
+        $lipidCalories = $meal->getLipid() * self::LIPID_CALORIC_VALUE;
+        $carbCalories = $meal->getCarb() * self::CARB_CALORIC_VALUE;
 
         return $proteinCalories + $lipidCalories + $carbCalories;
     }

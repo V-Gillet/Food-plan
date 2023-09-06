@@ -2,23 +2,23 @@
 
 namespace App\Service;
 
-use DateTime;
-use DateInterval;
 use App\Entity\Meal;
 use App\Entity\User;
-use Symfony\UX\Chartjs\Model\Chart;
-use App\Service\ComsumptionCalculator;
 use App\Repository\WeightHistoryRepository;
+use DateInterval;
+use DateTime;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
+use Symfony\UX\Chartjs\Model\Chart;
 
 class ChartJS
 {
 
     public function __construct(
-        private ChartBuilderInterface $chartBuilder,
-        private ComsumptionCalculator $consumptionCalc,
+        private ChartBuilderInterface   $chartBuilder,
+        private ComsumptionCalculator   $consumptionCalc,
         private WeightHistoryRepository $weightHistoRepo
-    ) {
+    )
+    {
     }
 
     public function proteinUserChart(User $user): Chart
@@ -236,11 +236,14 @@ class ChartJS
 
             /** @var DateTime */
             $weightDate = $today->sub($dateinterval);
-
-            $weightsHistos[] = $this->weightHistoRepo->findBy(['user' => $user, 'date' => $weightDate]);
+            $weight = $this->weightHistoRepo->findOneBy(['user' => $user, 'date' => $weightDate]);
+            if (!$weight) {
+                $weightsHistos[] = 0;
+            } else {
+                $weightsHistos[] = $weight->getWeight();
+            }
         }
 
-        if ($user->getCharacteristics()) {
             $chart->setData([
                 'datasets' => [
                     [
@@ -249,13 +252,13 @@ class ChartJS
                             '#45DB2E',
                         ],
                         'data' => [
-                            $weightsHistos[0][0]->getWeight(),
-                            $weightsHistos[1][0]->getWeight(),
-                            $weightsHistos[2][0]->getWeight(),
-                            $weightsHistos[3][0]->getWeight(),
-                            $weightsHistos[4][0]->getWeight(),
-                            $weightsHistos[5][0]->getWeight(),
-                            $weightsHistos[6][0]->getWeight()
+                            $weightsHistos[0],
+                            $weightsHistos[1],
+                            $weightsHistos[2],
+                            $weightsHistos[3],
+                            $weightsHistos[4],
+                            $weightsHistos[5],
+                            $weightsHistos[6]
                         ],
                     ],
                 ],
@@ -271,7 +274,5 @@ class ChartJS
                 ],
             ]);
             return $chart;
-        }
-        return null;
     }
 }
