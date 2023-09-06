@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\User;
 use DateTime;
 use App\Repository\MealRepository;
 use App\Repository\MealUserRepository;
@@ -32,9 +33,9 @@ class ComsumptionCalculator
     {
         /** @var \App\Entity\User */
         $user = $this->security->getUser();
-        if ($user->getCharacteristics()->getGoal() === 'gain') {
+        if ($user->getCharacteristics()->getGoal() === User::GAIN_OBJECTIVE) {
             $caloryLeft = $user->getNeed()->getGainCalory() - $this->totalCaloryConsummed();
-        } elseif ($user->getCharacteristics()->getGoal() === 'lean') {
+        } elseif ($user->getCharacteristics()->getGoal() === User::LEAN_OBJECTIVE) {
             $caloryLeft = $user->getNeed()->getLossCalory() - $this->totalCaloryConsummed();
         } else {
             $caloryLeft = $user->getNeed()->getMaintenanceCalory() - $this->totalCaloryConsummed();
