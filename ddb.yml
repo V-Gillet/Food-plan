@@ -1,0 +1,8 @@
+core:
+  domain:
+    sub: food-plan
+
+docker:
+  port_prefix: 373
+  cache_from_image: true
+  build_image_tag_from_version: false

@@ -1,0 +1,2 @@
+echo [smartcd] Deactivate
+$(ddb deactivate)

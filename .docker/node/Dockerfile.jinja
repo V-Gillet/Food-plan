@@ -1,0 +1,22 @@
+FROM node:20
+{% if '.docker/node/.ca-certificates/*' is found_with_glob %}
+
+COPY .ca-certificates/* /usr/local/share/ca-certificates/
+RUN update-ca-certificates
+{% endif %}
+
+ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+
+# Mise à jour de npm
+RUN npm i --global npm
+
+WORKDIR /app
+
+USER node
+
+RUN yarn config set cafile ${NODE_EXTRA_CA_CERTS} --global
+RUN npm config set prefix /home/node/.npm-packages
+ENV PATH="${PATH}:/home/node/.npm-packages/bin"
+
+VOLUME /app
+VOLUME /home/node/.cache
