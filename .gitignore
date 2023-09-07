@@ -25,3 +25,11 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+###> inetum-orleans/docker-devbox ###
+/docker-compose.yml
+/.docker/node/Dockerfile
+/.docker/php/Dockerfile
+/.docker/mysql/Dockerfile
+/*ddb.local.*
+###< inetum-orleans/docker-devbox ###

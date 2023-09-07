@@ -1,21 +1,85 @@
-version: '3'
-
+networks:
+  default:
+    name: food-plan-default
+  reverse-proxy:
+    external: true
+    name: reverse-proxy
 services:
-###> doctrine/doctrine-bundle ###
-  database:
-    image: postgres:${POSTGRES_VERSION:-15}-alpine
+  db:
+    build:
+      context: .docker/mysql
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
-      POSTGRES_USER: ${POSTGRES_USER:-app}
+      MYSQL_DATABASE: food-plan
+      MYSQL_ROOT_PASSWORD: ddb
+    init: true
+    restart: 'no'
+    user: 1000:1000
     volumes:
-      - database_data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
-
+    - db-data:/var/lib/mysql
+    - /home/vagrant/projects/Food-plan:/project
+  node:
+    build:
+      context: .docker/node
+    init: true
+    labels:
+      ddb.emit.docker:binary[node](args): node
+      ddb.emit.docker:binary[node](name): node
+      ddb.emit.docker:binary[node](workdir): /app
+      ddb.emit.docker:binary[npm](args): npm
+      ddb.emit.docker:binary[npm](name): npm
+      ddb.emit.docker:binary[npm](workdir): /app
+      ddb.emit.docker:binary[npx](args): npx
+      ddb.emit.docker:binary[npx](name): npx
+      ddb.emit.docker:binary[npx](workdir): /app
+    restart: 'no'
+    tty: true
+    user: 1000:1000
+    volumes:
+    - /home/vagrant/projects/Food-plan:/app
+    - node-cache:/home/node/.cache
+  php:
+    build:
+      context: .docker/php
+    init: true
+    labels:
+      ddb.emit.docker:binary[composer](args): composer
+      ddb.emit.docker:binary[composer](name): composer
+      ddb.emit.docker:binary[composer](workdir): /var/www/html
+      ddb.emit.docker:binary[php](args): php
+      ddb.emit.docker:binary[php](name): php
+      ddb.emit.docker:binary[php](workdir): /var/www/html
+      ddb.emit.docker:binary[symfony](args): symfony
+      ddb.emit.docker:binary[symfony](name): symfony
+      ddb.emit.docker:binary[symfony](workdir): /var/www/html
+    restart: 'no'
+    user: 1000:1000
+    volumes:
+    - /home/vagrant/projects/Food-plan:/var/www/html
+    - php-composer-cache:/composer/cache
+    - php-composer-vendor:/composer/vendor
+  web:
+    build:
+      context: .docker/web
+    init: true
+    labels:
+      ddb.emit.certs:generate[Food-plan]: food-plan.test
+      traefik.enable: 'true'
+      traefik.http.routers.Food-plan-tls.rule: Host(`food-plan.test`)
+      traefik.http.routers.Food-plan-tls.service: Food-plan
+      traefik.http.routers.Food-plan-tls.tls: 'true'
+      traefik.http.routers.Food-plan.rule: Host(`food-plan.test`)
+      traefik.http.routers.Food-plan.service: Food-plan
+      traefik.http.services.Food-plan.loadbalancer.server.port: '80'
+    networks:
+    - default
+    - reverse-proxy
+    restart: 'no'
+    volumes:
+    - /home/vagrant/projects/Food-plan:/var/www/html
+    - /home/vagrant/projects/Food-plan/.docker/web/apache.conf:/usr/local/apache2/conf/custom/apache.conf
+version: '3.7'
 volumes:
-###> doctrine/doctrine-bundle ###
-  database_data:
-###< doctrine/doctrine-bundle ###
+  db-data: {}
+  node-cache: {}
+  php-composer-cache: {}
+  php-composer-vendor: {}
