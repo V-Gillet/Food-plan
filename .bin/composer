@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# ddb:shim:binary
+shim=$(mktemp -p /tmp ddb.run.XXXXXXXXXX)
+echo "rm $shim">>"$shim"
+echo $(ddb run composer "$@") '"$@"'>>"$shim"
+source "$shim"

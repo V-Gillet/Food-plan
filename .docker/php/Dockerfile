@@ -1,0 +1,45 @@
+FROM php:8.1-fpm-alpine
+
+RUN docker-php-ext-install pdo_mysql
+
+# Addition of PHP-GD
+RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev \
+    && docker-php-ext-configure gd --enable-gd --with-jpeg --with-freetype \
+    && docker-php-ext-install gd
+
+# Addition of PHP-ZIP
+RUN apk add --no-cache libzip-dev \
+    && docker-php-ext-configure zip \
+    && docker-php-ext-install zip
+
+# composer install
+ENV COMPOSER_HOME /composer
+ENV PATH /composer/vendor/bin:$PATH
+ENV COMPOSER_ALLOW_SUPERUSER 1
+
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+
+RUN mkdir -p "$COMPOSER_HOME/cache" \
+&& mkdir -p "$COMPOSER_HOME/vendor" \
+&& chown -R www-data:www-data $COMPOSER_HOME \
+&& chown -R www-data:www-data /var/www
+
+# git, zip & unzip tools
+RUN apk add --no-cache git zip unzip
+
+# XDebug install
+#RUN apk add --update linux-headers
+#RUN pecl install -f xdebug
+#RUN docker-php-ext-enable xdebug
+#RUN yes | pecl install -f xdebug && docker-php-ext-enable xdebug
+
+RUN apk add bash && \
+wget https://get.symfony.com/cli/installer -O - | bash &&\
+mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
+
+VOLUME /composer/cache
+ADD fixuid.tar.gz /usr/local/bin
+RUN chown root:root /usr/local/bin/fixuid && chmod 4755 /usr/local/bin/fixuid && mkdir -p /etc/fixuid
+COPY fixuid.yml /etc/fixuid/config.yml
+ENTRYPOINT ["fixuid", "-q", "docker-php-entrypoint"]
+CMD ["php-fpm"]
